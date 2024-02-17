@@ -111,7 +111,10 @@ const CreateJob = () => {
                     setErrorVisible("none");
                 },2000)
             }else{
-                await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/job/createJob`, formData)
+                // await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/job/createJob`, formData)
+                await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/job/createJob`, formData,{
+                    headers:{Authorization:jwtToken}
+                })
                 .then((res)=>{
                     navigate('/job-report')
                 }).catch((err)=>{
