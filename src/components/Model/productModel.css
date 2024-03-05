@@ -1,0 +1,56 @@
+.modalBackground  {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 500px;
+    /* height: 240px; */
+    transform: translate(-50%, -50%);
+    border-radius: 12px;
+    background-color: white;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 35px;
+    display: flex;
+    flex-direction: column;
+    padding: 25px;
+  }
+  .errorContainers{
+    width: 100%;
+    padding: 2px;
+    font-size: 13px;
+    text-align: center;
+  }
+  .titleSection{
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  .popupTitle{
+    font-size: 20px;
+    color: #006d77;
+    font-weight: bold;
+  }
+  .bodySection{
+    margin-bottom: 20px;
+  }
+  .itemAddInput{
+    padding: 10px;
+    width: 70%;
+    font-weight: bold;
+  }
+  .closeBtnForProduct{
+    width: 6rem;
+    padding: 5px;
+    border: none;
+    height: 40px;
+    border-radius: 5px;
+    background-color: #d90429;
+    text-align: center;
+  }
+  .addBtnForProduct{
+    width: 6rem;
+    padding: 5px;
+    border: none;
+    height: 40px;
+    border-radius: 5px;
+    background-color: #006d77;
+    text-align: center;
+  }

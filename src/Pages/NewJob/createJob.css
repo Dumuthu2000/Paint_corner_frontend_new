@@ -1,5 +1,6 @@
 .createJobContainer{
     display: flex;
+    
 }
 .jobContainer{
     height: 100vh;

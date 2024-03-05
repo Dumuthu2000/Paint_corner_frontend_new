@@ -56,6 +56,7 @@ const InvoiceTable = (props) => {
                   ) : (
                     <>
                       <button className='editBtn' onClick={() => { props.handleEdit(data.invoiceID) }}>Edit</button>
+                      <button className='deleteBtn' onClick={()=>{props.handleDelete(data.invoiceID)}}>Delete</button>
                     </>
                   )}
                 </div>

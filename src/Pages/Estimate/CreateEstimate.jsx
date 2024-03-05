@@ -7,6 +7,8 @@ import EstimateTable from '../../components/Tables/EstimateTable';
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import LibraryAddIcon from '@mui/icons-material/LibraryAdd';
+import ProductModel from '../../components/Model/ProductModel';
 
 const CreateEstimate = () => {
   const navigate = useNavigate();
@@ -83,6 +85,9 @@ const CreateEstimate = () => {
 
   const [insurancePrice, setInsurancePrice] = useState(0);
 
+  //Product Model
+  const [openProductModel, setOpenProductModel] = useState(false);
+
   const [index, setIndex] = useState(null);
 
   const jwtToken = localStorage.getItem("jwtToken");
@@ -107,7 +112,7 @@ const CreateEstimate = () => {
      })
    }
    fetchItems();
-  },[jwtToken]);
+  },[jwtToken, openProductModel]);
 
 
   //Handle job searching
@@ -618,6 +623,15 @@ const paintUpdateHandler = () => {
               </div>
               {/* ------------------------------------------------------------------------------------------------------------------------ */}
               <div className="replacementItemContainer" style={{display:visible}}>
+                {/* Create product model pop up window */}
+                <div className="addNewProductItem">
+                  <div style={{color: "#006d77"}} onClick={()=>{
+                    setOpenProductModel(true)
+                  }}><LibraryAddIcon/></div>
+                  {openProductModel && (
+                    <ProductModel closeModel={setOpenProductModel}/>
+                  )}
+                </div>
                 <h2  style={{color:"red"}}>Replacement Items</h2>
                 <div className='selectableItemOptions'>
                 <Select
@@ -631,7 +645,7 @@ const paintUpdateHandler = () => {
                 />
                 <input type="text" placeholder='Price' className='priceText' value={replacementPrice} name='itemValue' onChange={handleReplacementPrice}/>
                 <select className='priceText' value={replacementInputValue} name='itemValue' onChange={handleReplecementInputValue} style={{borderRadius:"5px", marginLeft:"10px", border:"1px solid darkgoldenrod"}}>
-                <option value="" selected>Type</option>
+                  <option value="" selected>Type</option>
                   <option value="MR">MR</option>
                   <option value="RC">RC</option>
                   <option value="SH">SH</option>
@@ -658,6 +672,15 @@ const paintUpdateHandler = () => {
               </div>
               {/* ------------------------------------------------------------------------------------------------------------------- */}
               <div className="replacementItemContainer" style={{display:visible}}>
+                {/* Create product model pop up window */}
+                <div className="addNewProductItem">
+                  <div style={{color: "#006d77"}} onClick={()=>{
+                    setOpenProductModel(true)
+                  }}><LibraryAddIcon/></div>
+                  {openProductModel && (
+                    <ProductModel closeModel={setOpenProductModel}/>
+                  )}
+                </div>
                 <h2  style={{color:"red"}}>Remove and Re-Fixed Items</h2>
                 <div className='selectableItemOptions'>
                   <Select
@@ -689,6 +712,15 @@ const paintUpdateHandler = () => {
               </div>
               {/* ------------------------------------------------------------------------------------------------------------------- */}
               <div className="replacementItemContainer" style={{display:visible}}>
+                 {/* Create product model pop up window */}
+                 <div className="addNewProductItem">
+                  <div style={{color: "#006d77"}} onClick={()=>{
+                    setOpenProductModel(true)
+                  }}><LibraryAddIcon/></div>
+                  {openProductModel && (
+                    <ProductModel closeModel={setOpenProductModel}/>
+                  )}
+                </div>
                 <h2  style={{color:"red"}}>Repair Items</h2>
                 <div className='selectableItemOptions'>
                   <Select
@@ -719,6 +751,15 @@ const paintUpdateHandler = () => {
               </div>
               {/* ------------------------------------------------------------------------------------------------------------------- */}
               <div className="replacementItemContainer" style={{display:visible}}>
+                 {/* Create product model pop up window */}
+                 <div className="addNewProductItem">
+                  <div style={{color: "#006d77"}} onClick={()=>{
+                    setOpenProductModel(true)
+                  }}><LibraryAddIcon/></div>
+                  {openProductModel && (
+                    <ProductModel closeModel={setOpenProductModel}/>
+                  )}
+                </div>
                 <h2  style={{color:"red"}}>Paint Items</h2>
                 <div className='selectableItemOptions'>
                   <Select

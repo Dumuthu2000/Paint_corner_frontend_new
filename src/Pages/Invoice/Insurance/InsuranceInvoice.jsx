@@ -6,6 +6,9 @@ import Error from '../../../components/Errors/Error'
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import LibraryAddIcon from '@mui/icons-material/LibraryAdd';
+import FiberNewIcon from '@mui/icons-material/FiberNew';
+import AddNewInvoiceItemModel from '../../../components/Model/AddNewInvoiceItemModel'
 
 const InsuranceInvoice = () => {
     const errorType = [
@@ -42,6 +45,11 @@ const InsuranceInvoice = () => {
 
     const jwtToken = localStorage.getItem("jwtToken");
     const navigate = useNavigate();
+
+    const [replacementPopup, setReplacementPopup] = useState(false);
+    const [refixedPopup, setRefixedPopup] = useState(false);
+    const [repairPopup, setRepairPopup] = useState(false);
+    const [paintPopup, setPaintPopup] = useState(false);
 
     useEffect(()=>{
         if(!jwtToken){
@@ -88,22 +96,46 @@ const InsuranceInvoice = () => {
             }
         }
     }
-    const fetchTablesData= async()=>{
-        //Fetch table details
-        const tablesDetails = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/invoice/getInvoice/${jobID}`);
-        const estimateDetails = tablesDetails.data;
+    // const fetchTablesData= async()=>{
+    //     //Fetch table details
+    //     const tablesDetails = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/invoice/getInvoice/${jobID}`);
+    //     const estimateDetails = tablesDetails.data;
 
-        const replacementData = estimateDetails.filter((item) => item.tableCategory === "Replacement");
-        const refixedData = estimateDetails.filter((item) => item.tableCategory === "Refixed");
-        const repairData = estimateDetails.filter((item) => item.tableCategory === "Repair");
-        const paintData = estimateDetails.filter((item) => item.tableCategory === "Paint");
+    //     const replacementData = estimateDetails.filter((item) => item.tableCategory === "Replacement");
+    //     const refixedData = estimateDetails.filter((item) => item.tableCategory === "Refixed");
+    //     const repairData = estimateDetails.filter((item) => item.tableCategory === "Repair");
+    //     const paintData = estimateDetails.filter((item) => item.tableCategory === "Paint");
 
-        setReplacementTableData(replacementData);
-        setRefixedTableData(refixedData);
-        setRepairTableData(repairData);
-        setPaintTableData(paintData);
+    //     setReplacementTableData(replacementData);
+    //     setRefixedTableData(refixedData);
+    //     setRepairTableData(repairData);
+    //     setPaintTableData(paintData);
         
-    }
+    // }
+    const fetchTablesData = async () => {
+        try {
+            // Fetch table details
+            const tablesDetails = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/invoice/getInvoice/${jobID}`);
+            const estimateDetails = tablesDetails.data;
+    
+            const replacementData = estimateDetails.filter((item) => item.tableCategory === "Replacement");
+            const refixedData = estimateDetails.filter((item) => item.tableCategory === "Refixed");
+            const repairData = estimateDetails.filter((item) => item.tableCategory === "Repair");
+            const paintData = estimateDetails.filter((item) => item.tableCategory === "Paint");
+    
+            setReplacementTableData(replacementData);
+            setRefixedTableData(refixedData);
+            setRepairTableData(repairData);
+            setPaintTableData(paintData);
+        } catch (error) {
+            console.error("Error fetching tables data:", error.message);
+            // Handle the error as needed
+        }
+    };
+    useEffect(() => {
+        fetchTablesData();
+    }, [replacementPopup, refixedPopup, repairPopup, paintPopup, selectedInvoiceID]);
+    
 
     //--------------------------------------------------------------------Insurance price editing--------------------------------------------------------------
     const insuranceEditHandler=(selectedInvoiceID)=>{
@@ -157,6 +189,17 @@ const InsuranceInvoice = () => {
     
         return array;
     }
+
+    //------------------------------------------------Delete Inovice item-------------------------------------------------------------------------------
+    const insuranceDeleteHandler=async(selectedInvoiceID)=>{
+        setSelectedInvoiceID(selectedInvoiceID);
+        await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/api/invoice/deleteItem/${selectedInvoiceID}`)
+        .then((res)=>{
+            console.log("Deletion Success");
+        }).catch((err)=>{
+            alert(err.message)
+        })
+    }
   return (
     <div className='createEstimateContainer'>
         <Drawer/>
@@ -206,7 +249,24 @@ const InsuranceInvoice = () => {
                             </div>
                         </div>
                     </div>
-                    <h2 className='estimateTitles'>Replacement Items</h2>
+                    {/* Create product model pop up window */}
+                    <div className="addNewProductItem" style={{display:"flex", alignItems: 'end', gap:"1rem"}}>
+                        <h2 className='estimateTitles'>Replacement Items</h2>
+                        <div style={{color: "#006d77"}} onClick={()=>{
+                            if(jobID != 0){
+                                setReplacementPopup(true)
+                            }
+                        }}><FiberNewIcon/></div>
+                        {replacementPopup &&(
+                            <AddNewInvoiceItemModel 
+                                closeItemModel={setReplacementPopup} 
+                                modelName='Add New Replacement Item'
+                                typeOptionDisable = 'block'
+                                tableCategory = "Replacement"
+                                invoiceJobID = {jobID}
+                            />
+                        )}
+                    </div>
                     <InvoiceTable
                         tableData = {replacementTableData || []} 
                         tableWidth="100%"
@@ -214,11 +274,28 @@ const InsuranceInvoice = () => {
                         rowColor = "#926c15"
                         editingRow = {selectedInvoiceID}
                         handleEdit={(invoiceID) => insuranceEditHandler(invoiceID)}
+                        handleDelete = {(invoiceID)=>insuranceDeleteHandler(invoiceID)}
                         handleUpdate = {(invoiceID)=> insuranceUpdateHandle(invoiceID)}
                         handleInsurancePrice={handleInsurancePrice}
                         reportView = "none"                      
                     />
-                    <h2 className='estimateTitles'>Remove and Refixed Items</h2>
+                    <div className="addNewProductItem" style={{display:"flex", alignItems: 'end', gap:"1rem"}}>
+                        <h2 className='estimateTitles'>Remove and Refixed Items</h2>
+                        <div style={{color: "#006d77"}} onClick={()=>{
+                            if(jobID != 0){
+                                setRefixedPopup(true)
+                            }
+                        }}><FiberNewIcon/></div>
+                        {refixedPopup &&(
+                            <AddNewInvoiceItemModel 
+                                closeItemModel={setRefixedPopup} 
+                                modelName='Add New Remove & Refixed Item'
+                                typeOptionDisable = 'none'
+                                tableCategory = "Refixed"
+                                invoiceJobID = {jobID}
+                            />
+                        )}
+                    </div>
                     <InvoiceTable
                         tableData = {refixedTableData || []} 
                         display="none"
@@ -226,11 +303,28 @@ const InsuranceInvoice = () => {
                         rowColor = "#926c15"
                         editingRow = {selectedInvoiceID}
                         handleEdit={(invoiceID) => insuranceEditHandler(invoiceID)}
+                        handleDelete = {(invoiceID)=>insuranceDeleteHandler(invoiceID)}
                         handleUpdate = {(invoiceID)=> insuranceUpdateHandle(invoiceID)}
                         handleInsurancePrice={handleInsurancePrice}
                         reportView = "none" 
                     />
-                    <h2 className='estimateTitles'>Repair Items</h2>
+                    <div className="addNewProductItem" style={{display:"flex", alignItems: 'end', gap:"1rem"}}>
+                        <h2 className='estimateTitles'>Repair Items</h2>
+                         <div style={{color: "#006d77"}} onClick={()=>{
+                            if(jobID != 0){
+                                setRepairPopup(true)
+                            }
+                        }}><FiberNewIcon/></div>
+                        {repairPopup &&(
+                            <AddNewInvoiceItemModel 
+                                closeItemModel={setRepairPopup} 
+                                modelName='Add New Repair Item'
+                                typeOptionDisable = 'none'
+                                tableCategory = "Repair"
+                                invoiceJobID = {jobID}
+                            />
+                        )}
+                    </div>
                     <InvoiceTable
                         tableData = {repairTableData || []}  
                         display="none"
@@ -238,11 +332,28 @@ const InsuranceInvoice = () => {
                         rowColor = "#926c15"
                         editingRow = {selectedInvoiceID}
                         handleEdit={(invoiceID) => insuranceEditHandler(invoiceID)}
+                        handleDelete = {(invoiceID)=>insuranceDeleteHandler(invoiceID)}
                         handleUpdate = {(invoiceID)=> insuranceUpdateHandle(invoiceID)}
                         handleInsurancePrice={handleInsurancePrice}
                         reportView = "none" 
                     />
-                    <h2 className='estimateTitles'>Paint Items</h2>
+                    <div className="addNewProductItem" style={{display:"flex", alignItems: 'end', gap:"1rem"}}>
+                        <h2 className='estimateTitles'>Paint Items</h2>
+                         <div style={{color: "#006d77"}} onClick={()=>{
+                            if(jobID != 0){
+                                setPaintPopup(true)
+                            }
+                        }}><FiberNewIcon/></div>
+                        {paintPopup &&(
+                            <AddNewInvoiceItemModel 
+                                closeItemModel={setPaintPopup} 
+                                modelName='Add New Paint Item'
+                                typeOptionDisable = 'none'
+                                tableCategory = "Paint"
+                                invoiceJobID = {jobID}
+                            />
+                        )}
+                    </div>
                     <InvoiceTable
                         tableData = {paintTableData || []}  
                         display="none"
@@ -250,6 +361,7 @@ const InsuranceInvoice = () => {
                         rowColor = "#926c15"
                         editingRow = {selectedInvoiceID}
                         handleEdit={(invoiceID) => insuranceEditHandler(invoiceID)}
+                        handleDelete = {(invoiceID)=>insuranceDeleteHandler(invoiceID)}
                         handleUpdate = {(invoiceID)=> insuranceUpdateHandle(invoiceID)}
                         handleInsurancePrice={handleInsurancePrice}
                         reportView = "none" 

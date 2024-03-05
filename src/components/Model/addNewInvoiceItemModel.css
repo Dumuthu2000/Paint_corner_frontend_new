@@ -1,0 +1,22 @@
+.itemModalBackground  {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    /* width: 40%; */
+    /* height: 240px; */
+    transform: translate(-50%, -50%);
+    border-radius: 12px;
+    background-color: white;
+    box-shadow: rgba(0, 0, 0, 0.85) 0px 5px 10005px;
+    display: flex;
+    flex-direction: column;
+    padding: 25px;
+  }
+  .newItemModelTitle{
+    margin-bottom: 30px;
+    color: red;
+  }
+  .objectSection{
+    display: flex;
+    align-items: center;
+  }
