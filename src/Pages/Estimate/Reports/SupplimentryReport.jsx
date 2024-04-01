@@ -111,7 +111,7 @@ const SupplimentryReport = () => {
             <div className="estimateSheet">
                 {/* <img src={paintCornerLogo} alt="" width="100%" height="100rem"/> */}
                 <h2 className='estimateTitle' style={{backgroundColor:"#006d77"}}>Supplimentry <span>{supNo}</span></h2>
-                <h2 className='estimateTitles'>JOB DETAILS</h2>
+                <h2 className='estimateTitlesForSupplimentry'>JOB DETAILS</h2>
                 <div className="jobDetailsContainer">
                 <div style={{display:"flex", alignItems:"center", justifyContent:"space-between"}}>
                         <div>
@@ -144,7 +144,7 @@ const SupplimentryReport = () => {
                         </div>
                     </div>
                 </div>
-                <h2 className='estimateTitles' style={{display:isReplacementEmpty}}>REPLACEMENT ITEMS</h2>
+                <h2 className='estimateTitlesForSupplimentry' style={{display:isReplacementEmpty}}>REPLACEMENT ITEMS</h2>
                 <SupplimentrySheetTable
                     tableData = {replacementTableData || []} 
                     tableWidth="100%"
@@ -154,7 +154,7 @@ const SupplimentryReport = () => {
                     headerDisplay = "none"
                     insuranceDisplay = "none"
                 />
-                <h2 className='estimateTitles' style={{display:isRefixedEmpty}}>REMOVE AND REFIXED ITEMS</h2>
+                <h2 className='estimateTitlesForSupplimentry' style={{display:isRefixedEmpty}}>REMOVE AND REFIXED ITEMS</h2>
                 <SupplimentrySheetTable
                     tableData = {refixedTableData || []} 
                     display="none"
@@ -164,7 +164,7 @@ const SupplimentryReport = () => {
                     headerDisplay = "none"
                     insuranceDisplay = "none"
                 />
-                <h2 className='estimateTitles' style={{display:isRepairEmpty}}>REPAIR ITEMS</h2>
+                <h2 className='estimateTitlesForSupplimentry' style={{display:isRepairEmpty}}>REPAIR ITEMS</h2>
                 <SupplimentrySheetTable
                     tableData = {repairTableData || []}  
                     display="none"
@@ -174,7 +174,7 @@ const SupplimentryReport = () => {
                     headerDisplay = "none"
                     insuranceDisplay = "none"
                 />
-                <h2 className='estimateTitles' style={{display:isPaintEmpty}}>PAINT ITEMS</h2>
+                <h2 className='estimateTitlesForSupplimentry' style={{display:isPaintEmpty}}>PAINT ITEMS</h2>
                 <SupplimentrySheetTable
                     tableData = {paintTableData || []}  
                     display="none"

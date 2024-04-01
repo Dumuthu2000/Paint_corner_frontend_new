@@ -13,13 +13,11 @@
   
   .custom-table th, .custom-table td {
     border: 1px solid #ddd;
-    /* padding: 8px; */
     text-align: left;
     font-size: 14px;
     font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
   
   }
-  
   .custom-table th {
     background-color: #0077b6;
     color: white;

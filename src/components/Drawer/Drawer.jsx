@@ -41,7 +41,7 @@ const Drawer = () => {
       <div className="DrawerContainer">
         <div className="title">Paint Corner</div>
         <div className="linkButtons">
-          <Link to={``}><button><DashboardCustomizeIcon className='btnIcons'/>Dashboard</button></Link>
+          {/* <Link to={``}><button><DashboardCustomizeIcon className='btnIcons'/>Dashboard</button></Link> */}
           <Link to={`/new-job`}  onClick={handleNewJob}><button><FiberNewIcon className='btnIcons'/>New Job</button></Link>
           <select className='selectedItems' onChange={handleSelectChange}>
             <option value="/estimate">Estimate</option>
@@ -53,6 +53,11 @@ const Drawer = () => {
             <option value="/invoice/insurance/insuranceInvoice">Insurance Invoice</option>
             <option value="/invoice/personalInvoice">Personal Invoice</option>
           </select>
+          {/* <select className='selectedItems' onChange={handleSelectChange}>
+            <option value="" >Purchase Order</option>
+            <option value="/purchase-order/createPurchaseOrder">Create Purchase Order</option>
+            <option value="">Preview Purchase Order</option>
+          </select> */}
           <select className='selectedItems' onChange={handleSelectChange}>
             <option value="" >Reports</option>
             <option value="/jobCard-report">Job Cards</option>

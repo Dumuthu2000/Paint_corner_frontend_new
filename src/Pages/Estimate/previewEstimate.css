@@ -23,15 +23,16 @@
     text-align: center;
     color: white;
 }
-/* .estimateTitles{
+
+.estimateTitles{
     margin: 10px;
     margin-bottom: 5px;
     color: #ef233c;
     margin-top: 35px;
     border-radius: 5px;
-    font-size: 20px;
+    font-size: 18px;
     font-weight: bold;
-} */
+}
 .estimateSheet{
     background-color: white;
     margin: 20px auto;

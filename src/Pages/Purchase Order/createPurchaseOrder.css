@@ -1,0 +1,53 @@
+#purchaseInput{
+    border: 1px solid #ccc;
+    padding: 8px;
+    font-weight: bold;
+    color: black;
+}
+#purchaseIssuedDate{
+    border: 1px solid #ccc;
+    padding: 8px;
+    font-weight: bold;
+    color: black;
+    width: 15.5rem;
+}
+.purchaseContainer{
+    background-color: white;
+    padding: 20px;
+    width: 98%;
+    margin-left: 10px;
+    border-radius: 10px;
+    box-shadow: 4px 4px 4px 4px rgba(0, 0, 0, 0.3);
+}
+.purchaseTitle{
+    margin-bottom: 10px;
+    color: red;
+}
+.purchaseContent{
+    display: flex;
+    align-items: center;
+}
+.itemSelectOption{
+    width: 15rem;
+    font-weight: bold;
+    font-size: 15px;
+}
+#qtyInput{
+    width: 5rem;
+}
+.purchaseInput{
+    width: 10rem;
+    font-weight: bold;
+    font-size: 15px;
+    padding: 8px;
+}
+.purchaseAddBtn{
+    width: 5rem;
+    margin-right: 30px;
+    text-align: center;
+    margin-left: 20px;
+    border-radius: 5px;
+    padding: 5px;
+    font-weight: bold;
+
+}

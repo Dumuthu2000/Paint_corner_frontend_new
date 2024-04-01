@@ -132,7 +132,8 @@ const CreateEstimate = () => {
 
       return false;
     }else{
-      await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/estimate/searchJobCardForCreateEstimate/${jobNo}`)
+      // await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/estimate/searchJobCardForCreateEstimate/${jobNo}`)
+      await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/job/getJobDetails/${jobNo}`)
         .then((res)=>{
           const result = res.data[0];
   

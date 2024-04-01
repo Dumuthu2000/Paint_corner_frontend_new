@@ -34,12 +34,12 @@ h4{
     color: #004e89;
     font-size: 14.5px;
 }
-.estimateTitles{
+.estimateTitlesForReport{
     margin-bottom: 5px;
     color: #ef233c;
     margin-top: 10px;
     border-radius: 5px;
-    font-size: 17px;
+    font-size: 13px;
     font-weight: bold;
 }
 .estimateSheet{

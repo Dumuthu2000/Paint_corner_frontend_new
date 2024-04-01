@@ -19,6 +19,7 @@ import Insurance from './Pages/More Categories/Insurance/Insurance.jsx'
 import PersonalInvoice from './Pages/Invoice/Non-Insurance/PersonalInvoice.jsx'
 import PreviewPersonalInvoice from './Pages/Invoice/Non-Insurance/PersonalInvoicePreview.jsx'
 import PersonalInvoiceReport from './Pages/Invoice/Reports/PersonalInvoiceReport.jsx'
+import CreatePurchaseOrder from './Pages/Purchase Order/CreatePurchaseOrder.jsx'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
 
@@ -45,6 +46,7 @@ function App() {
         <Route path='/invoice/personalInvoice' element={<PersonalInvoice/>}/>
         <Route path='/invoice/personalInvoice-preview' element={<PreviewPersonalInvoice/>}/>
         <Route path='/invoice/personalInvoice-report/:jobID' element={<PersonalInvoiceReport/>}/>
+        <Route path='/purchase-order/createPurchaseOrder' element={<CreatePurchaseOrder/>}/>
       </Routes>
     </BrowserRouter>
     // <>

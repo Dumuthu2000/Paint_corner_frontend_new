@@ -94,7 +94,7 @@ const PersonalInvoiceReport = () => {
             <div className="estimateSheet">
                 {/* <img src={paintCornerLogo} alt="" width="100%" height="100rem"/> */}
                 <h2 className='estimateTitle' style={{backgroundColor:"#284b63"}}>Invoice</h2>
-                <h2 className='estimateTitles'>JOB DETAILS</h2>
+                <h2 className='estimateTitlesForReport'>JOB DETAILS</h2>
                 <div className="jobDetailsContainer" style={{marginBottom:"5px"}}>
                     <div style={{display:"flex", alignItems:"center", justifyContent:"space-between"}}>
                         <div>
@@ -128,7 +128,7 @@ const PersonalInvoiceReport = () => {
                     </div>
                 </div>
                 <hr />
-                <h2 className='estimateTitles' style={{display:isReplacementEmpty}}>REPLACEMENT ITEMS</h2>
+                <h2 className='estimateTitlesForReport' style={{display:isReplacementEmpty}}>REPLACEMENT ITEMS</h2>
                 <PersonalInvoiceTable
                     tableData = {replacementTableData || []} 
                     tableWidth="100%"
@@ -138,7 +138,7 @@ const PersonalInvoiceReport = () => {
                     insuranceDisplay = "none"
                     InputDisplay = "none"
                 />
-                <h2 className='estimateTitles' style={{display:isRefixedEmpty}}>REMOVE AND FIXED ITEMS</h2>
+                <h2 className='estimateTitlesForReport' style={{display:isRefixedEmpty}}>REMOVE AND FIXED ITEMS</h2>
                 <PersonalInvoiceTable
                     tableData = {refixedTableData || []} 
                     display="none"
@@ -148,7 +148,7 @@ const PersonalInvoiceReport = () => {
                     insuranceDisplay = "none"
                     InputDisplay = "none"
                 />
-                <h2 className='estimateTitles' style={{display:isRepairEmpty}}>REPAIR ITEMS</h2>
+                <h2 className='estimateTitlesForReport' style={{display:isRepairEmpty}}>REPAIR ITEMS</h2>
                 <PersonalInvoiceTable
                     tableData = {repairTableData || []}  
                     display="none"
@@ -158,7 +158,7 @@ const PersonalInvoiceReport = () => {
                     insuranceDisplay = "none"
                     InputDisplay = "none"
                 />
-                <h2 className='estimateTitles' style={{display:isPaintEmpty}}>PAINT ITEMS</h2>
+                <h2 className='estimateTitlesForReport' style={{display:isPaintEmpty}}>PAINT ITEMS</h2>
                 <PersonalInvoiceTable
                     tableData = {paintTableData || []}  
                     display="none"
