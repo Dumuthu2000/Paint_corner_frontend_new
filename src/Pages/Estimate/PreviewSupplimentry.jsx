@@ -31,6 +31,7 @@ const PreviewEstimate = () => {
     const [accidentDate, setAccidentDate] = useState('');
     const [vehicleNo, setVehicleNo] = useState('');
     const [vehicleName, setVehicleName] = useState('');
+    const [vehicleMake, setVehicleMake] = useState('');
     const [customerName, setCustomerName] = useState('');
     const [customerMobile, setCustomerMobile] = useState('');
     const [insuranceName, setInsuranceName] = useState('');
@@ -69,6 +70,7 @@ const PreviewEstimate = () => {
                 setAccidentDate(result.accidentDate);
                 setVehicleNo(result.vehicleNo);
                 setVehicleName(result.vehicleModel);
+                setVehicleMake(result.vehicleMake);
                 setCustomerName(result.customerName);
                 setCustomerMobile(result.customerMobile);
                 setInsuranceName(result.insuranceName);
@@ -180,7 +182,7 @@ const PreviewEstimate = () => {
                                 </div>
                                 <div>
                                     <label htmlFor="">Vehicle Name:</label><br />
-                                    <input type="text" className='estimateInput' value={vehicleName} disabled/>
+                                    <input type="text" className='estimateInput' value={vehicleMake+' '+vehicleName} disabled/>
                                 </div>
                             </div>
                             <div>

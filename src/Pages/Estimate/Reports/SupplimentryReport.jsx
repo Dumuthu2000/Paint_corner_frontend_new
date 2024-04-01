@@ -12,6 +12,7 @@ const SupplimentryReport = () => {
     const [accidentDate, setAccidentDate] = useState('');
     const [vehicleNo, setVehicleNo] = useState('');
     const [vehicleName, setVehicleName] = useState('');
+    const [vehicleMake, setVehicleMake] = useState('');
     const [customerName, setCustomerName] = useState('');
     const [customerMobile, setCustomerMobile] = useState('');
     const [insuranceName, setInsuranceName] = useState('');
@@ -45,6 +46,7 @@ const SupplimentryReport = () => {
             setAccidentDate(result.accidentDate);
             setVehicleNo(result.vehicleNo);
             setVehicleName(result.vehicleModel);
+            setVehicleMake(result.vehicleMake);
             setCustomerName(result.customerName);
             setCustomerMobile(result.customerMobile);
             setInsuranceName(result.insuranceName);
@@ -125,7 +127,7 @@ const SupplimentryReport = () => {
                             </div>
                             <div className='estimateJobDetails'>
                                 <h4>Vehicle Name:</h4>
-                                <p style={{fontSize:"14.5px"}}>{vehicleName}</p>
+                                <p style={{fontSize:"14.5px"}}>{vehicleMake+' '+vehicleName}</p>
                             </div>
                         </div>
                         <div>

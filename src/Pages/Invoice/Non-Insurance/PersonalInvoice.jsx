@@ -37,6 +37,7 @@ const PersonalInvoice = () => {
   const [accidentDate, setAccidentDate] = useState("");
   const [vehicleNo, setVehicleNo] = useState("");
   const [vehicleModel, setVehicleModel] = useState("");
+  const [vehicleMake, setVehicleMake] = useState('');
   const [customerName, setCustomerName] = useState("");
   const [customerMobile, setCustomerMobile] = useState("");
   const [insuranceName, setInsuranceName] = useState("");
@@ -136,6 +137,7 @@ const PersonalInvoice = () => {
           setAccidentDate(result.accidentDate);
           setVehicleNo(result.vehicleNo);
           setVehicleModel(result.vehicleModel);
+          setVehicleMake(result.vehicleMake);
           setCustomerName(result.customerName);
           setCustomerMobile(result.customerMobile);
           setInsuranceName(result.insuranceName);
@@ -596,7 +598,7 @@ const paintUpdateHandler = () => {
                   <div className='jobFormDetails'>
                     <div className="textContainer">
                       <label htmlFor="">Vehicle Name:</label><br />
-                      <input type="text" readOnly className='jobFormText' value={vehicleModel}/>
+                      <input type="text" readOnly className='jobFormText' value={vehicleMake+' '+vehicleModel}/>
                     </div>
                     <div className="textContainer">
                       <label htmlFor="">Insurance Company:</label><br />
