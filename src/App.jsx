@@ -22,7 +22,7 @@ import PersonalInvoiceReport from './Pages/Invoice/Reports/PersonalInvoiceReport
 import CreatePurchaseOrder from './Pages/Purchase Order/CreatePurchaseOrder.jsx'
 import UpdatePurchaseOrder from './Pages/Purchase Order/UpdatePurchaseOrder.jsx'
 import ViewPurchaseOrders from './Pages/Purchase Order/ViewPurchaseOrders.jsx'
-import PreviewPurchaseOrder from './Pages/Purchase Order/previewPurchaseOrder.jsx'
+import PreviewPurchaseOrder from './Pages/Purchase Order/PreviewPurchaseOrder.jsx'
 import PurchaseReport from './Pages/Purchase Order/Reports/PurchaseReport.jsx'
 import CreateQuotation from './Pages/Quotation/CreateQuotation.jsx'
 import UpdateQuotation from './Pages/Quotation/UpdateQuotation.jsx'
