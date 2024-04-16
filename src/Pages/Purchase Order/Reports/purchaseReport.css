@@ -1,0 +1,39 @@
+.purchaseReportTitle{
+    background-color: #004E89;
+    width: 90%;
+    margin: 3rem auto 5px auto ;
+    text-align: center;
+    color: white;
+    border-radius: 5px;
+    padding: 5px;
+}
+.poHeadSection{
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    width: 90%;
+    margin: 1px auto;
+}
+.orderTitle{
+    font-size: 12px;
+    color: #004E89;
+    font-weight: bold;
+    margin-bottom: 0.3rem;
+}
+.orderData{
+    color: #003249;
+    text-transform: uppercase;
+    font-size: 11px;
+    font-weight: 0;
+}
+.table-container-purchase-report{
+    width: 90%;
+    margin: 5px auto;
+    margin-top: 1rem;
+    
+}
+
+.horizontalLine{
+    width: 90%;
+    margin: 0.5px auto;
+}

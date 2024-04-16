@@ -1,6 +1,6 @@
 import './estimateTable.css';
 
-const PurchaseTable = (props) => {
+const QuotationTable = (props) => {
   return (
     <div className="table-container" style={{width:`${props.tableWidth}`}}>
       <table className="custom-table">
@@ -8,7 +8,6 @@ const PurchaseTable = (props) => {
           <tr>
             <th>No</th>
             <th>Item Name</th>
-            <th>Qty</th>
             <th>Amount</th>
             <th>Action</th>
           </tr>
@@ -18,11 +17,9 @@ const PurchaseTable = (props) => {
             <tr key={index}>
               <td>{index+1}</td>
               <td>{data.itemName}</td>
-              <td>{data.itemQty}</td>
-              <td>{data.itemPrice}</td>
+              <td>{data.amount}</td>
               <td>
                 <div className="tableBtn">
-                  {/* <button className='editBtn' onClick={()=>{props.handleEdit(index)}}>Edit</button> */}
                   <button className='deleteBtn' onClick={()=>{props.handleDelete(index)}}>Delete</button>
                 </div>
               </td>
@@ -35,5 +32,5 @@ const PurchaseTable = (props) => {
   )
 }
 
-export default PurchaseTable
+export default QuotationTable
 

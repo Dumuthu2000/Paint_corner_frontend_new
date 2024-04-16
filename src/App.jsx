@@ -20,6 +20,15 @@ import PersonalInvoice from './Pages/Invoice/Non-Insurance/PersonalInvoice.jsx'
 import PreviewPersonalInvoice from './Pages/Invoice/Non-Insurance/PersonalInvoicePreview.jsx'
 import PersonalInvoiceReport from './Pages/Invoice/Reports/PersonalInvoiceReport.jsx'
 import CreatePurchaseOrder from './Pages/Purchase Order/CreatePurchaseOrder.jsx'
+import UpdatePurchaseOrder from './Pages/Purchase Order/UpdatePurchaseOrder.jsx'
+import ViewPurchaseOrders from './Pages/Purchase Order/ViewPurchaseOrders.jsx'
+import PreviewPurchaseOrder from './Pages/Purchase Order/previewPurchaseOrder.jsx'
+import PurchaseReport from './Pages/Purchase Order/Reports/PurchaseReport.jsx'
+import CreateQuotation from './Pages/Quotation/CreateQuotation.jsx'
+import UpdateQuotation from './Pages/Quotation/UpdateQuotation.jsx'
+import PreviewQuotation from './Pages/Quotation/PreviewQuotation.jsx'
+import QuotationReport from './Pages/Quotation/Reports/QuotationReport.jsx'
+import ViewQuotations from './Pages/Quotation/ViewQuotations.jsx'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
 
@@ -41,12 +50,23 @@ function App() {
         <Route path='/invoice/insurance/insuranceInvoice' element={<InsuranceInvoice/>}/>
         <Route path='/invoice/insurance/invoiceReport/:jobID' element={<InvoiceReport/>}/>
         <Route path='/products' element={<Products/>}/>
-        <Route path='/vehicles' element={<Vehicles/>}/>
+        <Route path='/vehicles' element={<Vehicles/>}/>s
         <Route path='/insurance-companies' element={<Insurance/>}/>
         <Route path='/invoice/personalInvoice' element={<PersonalInvoice/>}/>
         <Route path='/invoice/personalInvoice-preview' element={<PreviewPersonalInvoice/>}/>
         <Route path='/invoice/personalInvoice-report/:jobID' element={<PersonalInvoiceReport/>}/>
         <Route path='/purchase-order/createPurchaseOrder' element={<CreatePurchaseOrder/>}/>
+        <Route path='/purchase-orders' element={<ViewPurchaseOrders/>}/>
+        <Route path='/purchase-order/preview-purchaseOrder' element={<PreviewPurchaseOrder/>}/>
+        <Route path='/purchase-order/update-purchaseOrder/:poID' element={<UpdatePurchaseOrder/>}/>
+        <Route path='/purchase-order/preview-purchaseOrder/:poID' element={<PreviewPurchaseOrder/>}/>
+        <Route path='/purchase-order/purchaseOrder-report' element={<PurchaseReport/>}/>
+        <Route path='/quotation/createQuotation' element={<CreateQuotation/>}/>
+        <Route path='/quotation/update-quotation/:quotationID' element={<UpdateQuotation/>}/>
+        <Route path='/quotation/preview-quotation' element={<PreviewQuotation/>}/>
+        <Route path='/quotation/preview-quotation/:quotationID' element={<PreviewQuotation/>}/>
+        <Route path='/quotation/quotation-report' element={<QuotationReport/>}/>
+        <Route path='/quotations' element={<ViewQuotations/>}/>
       </Routes>
     </BrowserRouter>
     // <>

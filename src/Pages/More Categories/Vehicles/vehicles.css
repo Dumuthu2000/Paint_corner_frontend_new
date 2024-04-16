@@ -20,6 +20,7 @@
     color: darkblue;
     font-weight: bold;
     font-size: 16px;
+    text-transform: uppercase;
 }
 .vehicleAddBtn{
     margin-top: 20px;

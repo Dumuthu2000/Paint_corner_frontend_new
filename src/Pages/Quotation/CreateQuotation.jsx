@@ -1,18 +1,17 @@
 import React from 'react'
-import './createPurchaseOrder.css';
+import './createQuotation.css';
 import Navbar from '../../components/Navbar/Navbar';
 import Drawer from '../../components/Drawer/Drawer';
 import Error from '../../components/Errors/Error';
-import DatePicker from 'react-datepicker';
 import { useState, useEffect } from 'react';
 import Select from 'react-select'
 import axios from 'axios';
 import ProductModel from '../../components/Model/ProductModel';
 import LibraryAddIcon from '@mui/icons-material/LibraryAdd';
-import PurchaseTable from '../../components/Tables/PurchaseTable';
+import QuotationTable from '../../components/Tables/QuotationTable';
 import { useNavigate } from 'react-router-dom';
 
-const CreatePurchaseOrder = () => {
+const CreateQuotation = () => {
       //Errors
   const errorType = [
     "All fields are required"
@@ -28,7 +27,7 @@ const CreatePurchaseOrder = () => {
   //Options
   const [vehicleOptions, setVehicleOptions] = useState([]);
   const [vehicleModelOptions, setVehicleMakeOptions] = useState([]);
-  const [companyOptions, setCompanyNameOptions] = useState([]);
+  const [insuranceOptions, setInsuranceOptions] = useState([]);
   const [itemOptions, setItemOptions] = useState([]);
 
    //Product Model
@@ -40,14 +39,14 @@ const CreatePurchaseOrder = () => {
   const[vehicleNo, setVehicleNo] = useState(null);
   const[vehicleMake, setVehicleModel]= useState(null);
   const[vehicleModel, setVehicleModels]= useState(null);
+  const[insuranceName, setInsuranceName] = useState(null);
   const[companyName, setCompanyName] = useState(null);
-  const[issuedDate, setIssuedDate] = useState(null);
+  const[companyMobile, setCompanyMobile] = useState(null);
 
   //Purchase Item Container
   const[itemName, setItemName] = useState(null);
-  const[itemQty, setItemQty] = useState('');
-  const[itemPrice, setItemPrice] = useState('');
-  const[purchaseTableData, setPurchaseTableData] = useState([]);
+  const[amount, setAmount] = useState('');
+  const[quotationTableData, setQuotationTableData] = useState([]);
 
   const navigate = useNavigate();
 
@@ -74,13 +73,13 @@ const CreatePurchaseOrder = () => {
         })
     }
     const fetchCompanyName=async()=>{
-        await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/purchaseCompany/companies`)
+        await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/insurance/getInsurance`)
         .then((res)=>{
-            const company = res.data.map((company)=>({
-                value: company.companyName,
-                label: company.companyName,
+            const insurance = res.data.map((insurance)=>({
+                value: insurance.insuranceName,
+                label: insurance.insuranceName,
             }));
-            setCompanyNameOptions(company);
+            setInsuranceOptions(insurance);
         })
     }
     const fetchProductItems=async()=>{
@@ -114,27 +113,25 @@ const CreatePurchaseOrder = () => {
         setItemName(itemName);
     }
 
-    const handleSelectCompanyName=(companyName)=>{
-        setCompanyName(companyName.value);
+    const handleSelectInsuranceName=(insuranceName)=>{
+        setInsuranceName(insuranceName.value);
     }
 
   const handleTableBtn=async()=>{
-    const newPurchaseOrderData={
-        item_id:itemName.itemID,
+    const newQuotationData={
+        itemID:itemName.itemID,
         itemName: itemName.label, 
-        itemPrice: parseFloat(itemPrice).toFixed(2),
-        itemQty: itemQty,  
+        amount: parseFloat(amount).toFixed(2),
     }
 
-    setPurchaseTableData((prevData)=>[...prevData, newPurchaseOrderData]);
+    setQuotationTableData((prevData)=>[...prevData, newQuotationData]);
     setItemName(null);
-    setItemQty('');
-    setItemPrice('');
+    setAmount('');
   }
 
   //Handling submit button
   const handleSubmitBtn=async()=>{
-    if(!vehicleNo || !vehicleMake || !vehicleModel || !companyName || !issuedDate || !purchaseTableData){
+    if(!vehicleNo || !vehicleMake || !vehicleModel || !insuranceName || !companyName || !companyMobile || !quotationTableData){
         setErrorVisible("block");
         setError(errorType[0]);
         setBackgroundColor("#fae0e4");
@@ -146,59 +143,56 @@ const CreatePurchaseOrder = () => {
           setErrorVisible("none");
         }, 2000);
     }else{
-        const formData = {vehicleNo, vehicleMake, vehicleModel, companyName, issuedDate, purchaseTableData}
-        await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/purchaseOrder/createPurchaseOrder`, formData)
+        const formData = {vehicleNo, vehicleMake, vehicleModel, insuranceName, companyName, companyMobile, quotationTableData}
+        await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/quotation/createQuotation`, formData)
         .then((res)=>{
-            navigate(`/purchase-order/preview-purchaseOrder`)
+            navigate(`/quotation/preview-quotation`)
         }).catch((err)=>{
             alert(err.message)
         })
     }
   }
 
-  const editHandler=async(index)=>{
-    setUpdateIndex(index)
-    setAddView('none')
-    setUpdateView('block')
-    const {itemName, itemQty, itemPrice} = purchaseTableData[index];
-    setItemName({label: itemName, value: itemName});
-    setItemQty(itemQty)
-    setItemPrice(itemPrice)
-  }
+//   const editHandler=async(index)=>{
+//     setUpdateIndex(index)
+//     setAddView('none')
+//     setUpdateView('block')
+//     const {itemName, amount} = quotationTableData[index];
+//     setItemName({label: itemName, value: itemName});
+//     setAmount(amount)
+//   }
 
-  const handleUpdateBtn = async () => {
-    if (updateIndex !== null) {
-        const updatedPurchaseData = [...purchaseTableData];
-        updatedPurchaseData[updateIndex] = {
-            item_id: itemName.itemID,
-            itemName: itemName.label,
-            itemPrice: parseFloat(itemPrice).toFixed(2),
-            itemQty: itemQty,
-        };
-        setPurchaseTableData(updatedPurchaseData);
-        setItemName(null);
-        setItemQty('');
-        setItemPrice('');
-        setAddView('block')
-        setUpdateView('none')
-    }
-};
+//   const handleUpdateBtn = async () => {
+//     if (updateIndex !== null) {
+//         const updatedQuotationData = [...quotationTableData];
+//         updatedQuotationData[updateIndex] = {
+//             itemID: itemName.itemID,
+//             itemName: itemName.label,
+//             amount: parseFloat(amount).toFixed(2),
+//         };
+//         setQuotationTableData(updatedQuotationData);
+//         setItemName(null);
+//         setAmount('');
+//         setAddView('block')
+//         setUpdateView('none')
+//     }
+// };
 
 const deleteHandler=async(index)=>{
     console.log(index + 1, "Need to delete")
-    const updatedPurchaseData = purchaseTableData.filter((_, i) => i !== index);
+    const updatedQuotationData = quotationTableData.filter((_, i) => i !== index);
      // Update the state with the new array
-    setPurchaseTableData(updatedPurchaseData);
+    setQuotationTableData(updatedQuotationData);
 }
   return (
     <div className="createEstimateContainer">
         <Drawer/>
         <div className="estimateContainer">
-            <Navbar className='navbarComponent' text="Purchase Order / Create Purchase Order"/>
+            <Navbar className='navbarComponent' text="Quotation / Create Quotation"/>
             <Error value={erroVisible} errorName={error} backColor={backgroundColor} border={borderColor} font={fontColor} icon={iconColor}/>
-            <div className='mainContainer'>
+            <div className='mainContainerForQuotation'>
                     <div className="jobDetails" style={{width:'70%'}}>
-                        <h2 style={{marginBottom:"20px", color:"red"}}>Details of Purchase Order</h2>
+                        <h2 style={{marginBottom:"20px", color:"red"}}>Details of Quotation</h2>
                         <form action="">
                         <div className='jobFormDetails'>
                             <div className="textContainer">
@@ -231,24 +225,31 @@ const deleteHandler=async(index)=>{
                                     required
                                 />
                             </div>
-                            
                         </div>
                         <div className='purchaseDetails'>
-                            <div className="textContainer">
-                                <label htmlFor="">Company Name:</label><br />
+                            <div className="textContainer" style={{marginLeft:'0.2rem'}}>
+                                <label htmlFor="">Insurance Name:</label><br />
                                 <Select
-                                    options={companyOptions}
+                                    options={insuranceOptions}
                                     isSearchable={true}
-                                    placeholder="Select Company"
+                                    placeholder="Select Insurance"
                                     className='jobFormText'
                                     // value={companyName}
-                                    onChange={handleSelectCompanyName}
+                                    onChange={handleSelectInsuranceName}
                                     required
                             />
                             </div>
                             <div className="textContainer">
-                                <label htmlFor="">Issued Date:</label><br />
-                                <DatePicker selected={issuedDate} onChange={(date)=>setIssuedDate(date)} placeholderText='Select Date' className='jobFormText' id='purchaseIssuedDate'/>
+                                <label htmlFor="">Company Name:</label><br />
+                                <input type="text"  className='jobFormText' style={{padding:'8px', border:'1px solid #ccc', color:'black'}} placeholder='Ex. Upul Motors' onChange={(e)=>{
+                                    setCompanyName(e.target.value)
+                                }}/>
+                            </div>
+                            <div className="textContainer" style={{marginRight:'1rem'}}>
+                                <label htmlFor="">Mobile No:</label><br />
+                                <input type="text"  className='jobFormText' style={{padding:'8px', border:'1px solid #ccc', color:'black'}} placeholder='Ex. 07x xxx xx xx' onChange={(e)=>{
+                                    setCompanyMobile(e.target.value)
+                                }}/>
                             </div>
                         </div>
                         </form>
@@ -262,7 +263,7 @@ const deleteHandler=async(index)=>{
                                 <ProductModel closeModel={setOpenProductModel}/>
                             )}
                         </div>
-                        <h3 className='purchaseTitle'>Purchase Items</h3>
+                        <h3 className='purchaseTitle'>Quotation Items</h3>
                         <div className="purchaseContent">
                             <Select
                                 options={itemOptions}
@@ -273,23 +274,20 @@ const deleteHandler=async(index)=>{
                                 onChange={handleItemName}
                                 required
                             />
-                            <input type="text" className="purchaseInput" id='qtyInput' placeholder='Qty' value={itemQty} onChange={(e)=>{
-                                setItemQty(e.target.value)
-                            }}/>
-                            <input type="text" className="purchaseInput" placeholder='Amount (Rs)' value={itemPrice} onChange={(e)=>{
-                                setItemPrice(e.target.value)
+                            <input type="text" className="purchaseInput" placeholder='Amount (Rs)' value={amount} onChange={(e)=>{
+                                setAmount(e.target.value)
                             }}/>
                             <button style={{display:addView}} className="purchaseAddBtn" onClick={handleTableBtn}>Add</button>
-                            <button style={{display:updateView}} className="purchaseUpdateBtn" onClick={handleUpdateBtn}>Update</button>
+                            {/* <button style={{display:updateView}} className="purchaseUpdateBtn" onClick={handleUpdateBtn}>Update</button> */}
                             <div>
-                                <PurchaseTable 
-                                    tableData={purchaseTableData}
-                                    handleEdit={(index) => editHandler(index)}
+                                <QuotationTable 
+                                    tableData={quotationTableData}
+                                    // handleEdit={(index) => editHandler(index)}
                                     handleDelete={(index)=>deleteHandler(index)}
                                 />
                             </div>
                         </div>
-                        <button className='poBtn' onClick={handleSubmitBtn}>SUBMIT PURCHASE ORDER</button>
+                        <button className='poBtn' onClick={handleSubmitBtn}>SUBMIT QUOTATION</button>
                     </div>
                 </div>
         </div>
@@ -297,4 +295,5 @@ const deleteHandler=async(index)=>{
   )
 }
 
-export default CreatePurchaseOrder
+export default CreateQuotation
+

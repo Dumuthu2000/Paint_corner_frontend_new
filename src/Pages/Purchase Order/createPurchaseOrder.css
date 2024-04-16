@@ -11,6 +11,12 @@
     color: black;
     width: 15.5rem;
 }
+.purchaseDetails{
+    margin-left: 10px;
+    display: flex;
+    align-items: center;
+    gap: 1.8rem;
+}
 .purchaseContainer{
     background-color: white;
     padding: 20px;
@@ -49,5 +55,35 @@
     border-radius: 5px;
     padding: 5px;
     font-weight: bold;
+    border: none;
+    background-color: #05668d;
 
+}
+.purchaseAddBtn:hover{
+    background-color: rgba(0, 0, 0, 0.9);
+    color: white;
+}
+.poBtn{
+    text-align: center;
+    font-weight: bold;
+    border: 2px solid #468faf;
+    color: #468faf;
+    border-radius: 10px;
+    background-color: #dfe7fd;
+    padding: 5px;
+}
+.purchaseUpdateBtn{
+    width: 6rem;
+    background-color: #00a896;
+    border: none;
+    margin-right: 30px;
+    text-align: center;
+    margin-left: 20px;
+    border-radius: 5px;
+    padding: 5px;
+    font-weight: bold;
+}
+.purchaseUpdateBtn:hover{
+    background-color: rgba(0, 0, 0, 0.9);
+    color: white;
 }

@@ -1,5 +1,5 @@
 import React from 'react'
-import './createPurchaseOrder.css';
+import './updatePurchaseOrder.css';
 import Navbar from '../../components/Navbar/Navbar';
 import Drawer from '../../components/Drawer/Drawer';
 import Error from '../../components/Errors/Error';
@@ -10,9 +10,9 @@ import axios from 'axios';
 import ProductModel from '../../components/Model/ProductModel';
 import LibraryAddIcon from '@mui/icons-material/LibraryAdd';
 import PurchaseTable from '../../components/Tables/PurchaseTable';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
-const CreatePurchaseOrder = () => {
+const UpdatePurchaseOrder = () => {
       //Errors
   const errorType = [
     "All fields are required"
@@ -37,11 +37,14 @@ const CreatePurchaseOrder = () => {
   const [updateView, setUpdateView] = useState('none')
   const [updateIndex, setUpdateIndex] = useState(null);
 
-  const[vehicleNo, setVehicleNo] = useState(null);
-  const[vehicleMake, setVehicleModel]= useState(null);
-  const[vehicleModel, setVehicleModels]= useState(null);
-  const[companyName, setCompanyName] = useState(null);
-  const[issuedDate, setIssuedDate] = useState(null);
+  const[orderItems, setOrderItems] = useState([]);
+  const[purchaseData, setPurchaseData] = useState({});
+
+  const[vehicleNo, setVehicleNo] = useState('');
+  const[vehicleMake, setVehicleModel]= useState('');
+  const[vehicleModel, setVehicleModels]= useState('');
+  const[companyName, setCompanyName] = useState('');
+  const[issuedDate, setIssuedDate] = useState('');
 
   //Purchase Item Container
   const[itemName, setItemName] = useState(null);
@@ -49,9 +52,22 @@ const CreatePurchaseOrder = () => {
   const[itemPrice, setItemPrice] = useState('');
   const[purchaseTableData, setPurchaseTableData] = useState([]);
 
+
   const navigate = useNavigate();
+  const {poID} = useParams();
 
   useEffect(()=>{
+    const purchaseData=async()=>{
+        axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/purchaseOrder/getPurchaseOrder/${poID}`)
+          .then((res)=>{
+              setOrderItems(res.data.purchaseItems)
+              setPurchaseData(res.data.purchaseOrder)
+              console.log(res.data.purchaseItems)
+            
+          }).catch((err)=>{
+              alert(err.message);
+          })
+    }
     const fetchVehicleModels=async()=>{
         await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/job/vehicle/model`)
         .then((res)=>{
@@ -65,7 +81,6 @@ const CreatePurchaseOrder = () => {
     const fetchVehicleMake=async()=>{
         await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/job/vehicle/make`)
         .then((res)=>{
-            console.log(res.data)
             const vehicleMakes = res.data.map((vehicle)=>({
                 value: vehicle.make,
                 label: vehicle.make,
@@ -94,11 +109,33 @@ const CreatePurchaseOrder = () => {
             setItemOptions(items);
         })
     }
+    purchaseData();
     fetchVehicleModels();
     fetchVehicleMake();
     fetchCompanyName();
     fetchProductItems();
   },[])
+
+    // Update state variables when purchaseData changes
+    useEffect(() => {
+        setVehicleNo(purchaseData.vehicleNo || '');
+        setVehicleModel(purchaseData.vehicleMake || '');
+        setVehicleModels(purchaseData.vehicleModel || '');
+        setCompanyName(purchaseData.companyName || '');
+        const parsedDate = purchaseData.issuedDate ? new Date(purchaseData.issuedDate) : null;
+        setIssuedDate(parsedDate);
+      }, [purchaseData]);
+
+      useEffect(() => {
+        const initialPurchaseTableData = orderItems.map((item) => ({
+            item_id: item.item_id,
+            itemName: item.itemName,
+            itemQty: item.itemQty,
+            itemPrice: parseFloat(item.itemPrice).toFixed(2),
+        }));
+        setPurchaseTableData(initialPurchaseTableData);
+    }, [orderItems]);
+    
 
     const handleSelectVehicleModel = (vehicleMake) => {
         setVehicleModel(vehicleMake.value);
@@ -147,54 +184,31 @@ const CreatePurchaseOrder = () => {
         }, 2000);
     }else{
         const formData = {vehicleNo, vehicleMake, vehicleModel, companyName, issuedDate, purchaseTableData}
-        await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/purchaseOrder/createPurchaseOrder`, formData)
+        await axios.put(`${import.meta.env.VITE_API_BASE_URL}/api/purchaseOrder/updatePurchaseOrder/${poID}`, formData)
         .then((res)=>{
-            navigate(`/purchase-order/preview-purchaseOrder`)
+            navigate(`/purchase-order/preview-purchaseOrder/${poID}`)
         }).catch((err)=>{
             alert(err.message)
         })
     }
   }
-
-  const editHandler=async(index)=>{
-    setUpdateIndex(index)
-    setAddView('none')
-    setUpdateView('block')
-    const {itemName, itemQty, itemPrice} = purchaseTableData[index];
-    setItemName({label: itemName, value: itemName});
-    setItemQty(itemQty)
-    setItemPrice(itemPrice)
-  }
-
-  const handleUpdateBtn = async () => {
-    if (updateIndex !== null) {
-        const updatedPurchaseData = [...purchaseTableData];
-        updatedPurchaseData[updateIndex] = {
-            item_id: itemName.itemID,
-            itemName: itemName.label,
-            itemPrice: parseFloat(itemPrice).toFixed(2),
-            itemQty: itemQty,
-        };
-        setPurchaseTableData(updatedPurchaseData);
-        setItemName(null);
-        setItemQty('');
-        setItemPrice('');
-        setAddView('block')
-        setUpdateView('none')
-    }
+const deleteHandler = async (index) => {
+    console.log('click')
+    const order_id = poID;
+    const item_id = purchaseTableData[index].item_id;
+    await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/api/purchaseOrder/deletePurchaseOrder/${order_id}`, {
+        data:{item_id}
+    })
+    .then((res) => {
+        window.location.reload()
+    })
 };
 
-const deleteHandler=async(index)=>{
-    console.log(index + 1, "Need to delete")
-    const updatedPurchaseData = purchaseTableData.filter((_, i) => i !== index);
-     // Update the state with the new array
-    setPurchaseTableData(updatedPurchaseData);
-}
   return (
     <div className="createEstimateContainer">
         <Drawer/>
         <div className="estimateContainer">
-            <Navbar className='navbarComponent' text="Purchase Order / Create Purchase Order"/>
+            <Navbar className='navbarComponent' text="Purchase Order / Update Purchase Order"/>
             <Error value={erroVisible} errorName={error} backColor={backgroundColor} border={borderColor} font={fontColor} icon={iconColor}/>
             <div className='mainContainer'>
                     <div className="jobDetails" style={{width:'70%'}}>
@@ -203,7 +217,7 @@ const deleteHandler=async(index)=>{
                         <div className='jobFormDetails'>
                             <div className="textContainer">
                                 <label htmlFor="">Vehicle No:</label><br />
-                                <input type="text" className='jobFormText' id='purchaseInput' placeholder='Ex. CAC-2454' onChange={(e)=>{
+                                <input type="text" className='jobFormText' id='purchaseInput' placeholder='Ex. CAC-2454' value={vehicleNo} onChange={(e)=>{
                                     setVehicleNo(e.target.value)
                                 }}/>
                             </div>
@@ -214,7 +228,7 @@ const deleteHandler=async(index)=>{
                                     isSearchable={true}
                                     placeholder="Ex TOYOTA"
                                     className='jobFormText'
-                                    // value={vehicleModel}
+                                    value={vehicleModelOptions.find(option => option.value === vehicleModel)}
                                     onChange={handleSelectVehicleMake}
                                     required
                                 />
@@ -226,7 +240,7 @@ const deleteHandler=async(index)=>{
                                     isSearchable={true}
                                     placeholder="EX AXIO-161"
                                     className='jobFormText'
-                                    // value={vehicleMake}
+                                    value={vehicleOptions.find(option => option.value === vehicleMake)}
                                     onChange={handleSelectVehicleModel}
                                     required
                                 />
@@ -241,14 +255,14 @@ const deleteHandler=async(index)=>{
                                     isSearchable={true}
                                     placeholder="Select Company"
                                     className='jobFormText'
-                                    // value={companyName}
+                                    value={companyOptions.find(option => option.value === companyName)}
                                     onChange={handleSelectCompanyName}
                                     required
                             />
                             </div>
                             <div className="textContainer">
                                 <label htmlFor="">Issued Date:</label><br />
-                                <DatePicker selected={issuedDate} onChange={(date)=>setIssuedDate(date)} placeholderText='Select Date' className='jobFormText' id='purchaseIssuedDate'/>
+                                <DatePicker selected={ issuedDate} onChange={(date)=>setIssuedDate(date)} placeholderText='Select Date' className='jobFormText' id='purchaseIssuedDate'/>
                             </div>
                         </div>
                         </form>
@@ -280,16 +294,16 @@ const deleteHandler=async(index)=>{
                                 setItemPrice(e.target.value)
                             }}/>
                             <button style={{display:addView}} className="purchaseAddBtn" onClick={handleTableBtn}>Add</button>
-                            <button style={{display:updateView}} className="purchaseUpdateBtn" onClick={handleUpdateBtn}>Update</button>
+                            {/* <button style={{display:updateView}} className="purchaseUpdateBtn" onClick={handleUpdateBtn}>Update</button> */}
                             <div>
-                                <PurchaseTable 
+                                <PurchaseTable
                                     tableData={purchaseTableData}
                                     handleEdit={(index) => editHandler(index)}
                                     handleDelete={(index)=>deleteHandler(index)}
                                 />
                             </div>
                         </div>
-                        <button className='poBtn' onClick={handleSubmitBtn}>SUBMIT PURCHASE ORDER</button>
+                        <button className='poBtn' onClick={handleSubmitBtn}>UPDATE PURCHASE ORDER</button>
                     </div>
                 </div>
         </div>
@@ -297,4 +311,4 @@ const deleteHandler=async(index)=>{
   )
 }
 
-export default CreatePurchaseOrder
+export default UpdatePurchaseOrder

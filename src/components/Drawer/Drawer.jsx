@@ -53,11 +53,18 @@ const Drawer = () => {
             <option value="/invoice/insurance/insuranceInvoice">Insurance Invoice</option>
             <option value="/invoice/personalInvoice">Personal Invoice</option>
           </select>
-          {/* <select className='selectedItems' onChange={handleSelectChange}>
+          <select className='selectedItems' onChange={handleSelectChange}>
             <option value="" >Purchase Order</option>
+            <option value="/purchase-orders" >All Purchase Orders</option>
             <option value="/purchase-order/createPurchaseOrder">Create Purchase Order</option>
-            <option value="">Preview Purchase Order</option>
-          </select> */}
+            {/* <option value="/purchase-order/preview-purchaseOrder">Preview Purchase Order</option> */}
+          </select>
+          <select className='selectedItems' onChange={handleSelectChange}>
+            <option value="" >Quotation</option>
+            <option value="/quotations" >All Quotations</option>
+            <option value="/quotation/createQuotation">Create Quotation</option>
+            {/* <option value="/quotation/preview-quotation">PreviewQuotation</option> */}
+          </select>
           <select className='selectedItems' onChange={handleSelectChange}>
             <option value="" >Reports</option>
             <option value="/jobCard-report">Job Cards</option>
