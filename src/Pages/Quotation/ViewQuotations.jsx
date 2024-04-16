@@ -1,4 +1,4 @@
-import './viewquotations.css'
+import './viewQuotations.css'
 import Navbar from '../../components/Navbar/Navbar'
 import Drawer from '../../components/Drawer/Drawer'
 import { useState, useEffect } from 'react'
