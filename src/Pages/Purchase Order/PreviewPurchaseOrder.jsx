@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { Link, useParams } from "react-router-dom";
 
-const previewPurchaseOrder = () => {
+const PreviewPurchaseOrder = () => {
     const[orderDetails, setOrderDetails] = useState({})
     const[orderItems, setOrderItems] = useState([])
     const {poID} = useParams();
@@ -121,4 +121,4 @@ const previewPurchaseOrder = () => {
   );
 };
 
-export default previewPurchaseOrder;
+export default PreviewPurchaseOrder;
