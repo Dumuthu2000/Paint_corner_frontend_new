@@ -43,7 +43,7 @@ const CreateQuotation = () => {
   const[companyName, setCompanyName] = useState(null);
   const[companyMobile, setCompanyMobile] = useState(null);
 
-  //Purchase Item Container
+  //Purchase Item Containers
   const[itemName, setItemName] = useState(null);
   const[amount, setAmount] = useState('');
   const[quotationTableData, setQuotationTableData] = useState([]);
