@@ -29,6 +29,7 @@ import UpdateQuotation from './Pages/Quotation/UpdateQuotation.jsx'
 import PreviewQuotation from './Pages/Quotation/PreviewQuotation.jsx'
 import QuotationReport from './Pages/Quotation/Reports/QuotationReport.jsx'
 import ViewQuotations from './Pages/Quotation/ViewQuotations.jsx'
+import PurchaseCompany from './Pages/More Categories/Purchase Company/purchaseCompany.jsx'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
 
@@ -55,6 +56,7 @@ function App() {
         <Route path='/invoice/personalInvoice' element={<PersonalInvoice/>}/>
         <Route path='/invoice/personalInvoice-preview' element={<PreviewPersonalInvoice/>}/>
         <Route path='/invoice/personalInvoice-report/:jobID' element={<PersonalInvoiceReport/>}/>
+        <Route path='/purchase-company' element={<PurchaseCompany/>}/>
         <Route path='/purchase-order/createPurchaseOrder' element={<CreatePurchaseOrder/>}/>
         <Route path='/purchase-orders' element={<ViewPurchaseOrders/>}/>
         <Route path='/purchase-order/preview-purchaseOrder' element={<PreviewPurchaseOrder/>}/>

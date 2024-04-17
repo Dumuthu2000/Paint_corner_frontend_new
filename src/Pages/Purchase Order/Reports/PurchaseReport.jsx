@@ -30,6 +30,24 @@ const PurchaseReport = () => {
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
   });
+
+  
+  const formatDate = (dateString) => {
+    try {
+      if (!dateString) return ''; // Return empty string if dateString is falsy
+  
+      const dateObject = new Date(dateString);
+      if (isNaN(dateObject.getTime())) {
+        // Check if dateObject is invalid (NaN)
+        return ''; // Return empty string for invalid date
+      }
+  
+      return dateObject.toISOString().split('T')[0]; // Format date as 'YYYY-MM-DD'
+    } catch (error) {
+      console.error('Error formatting date:', error);
+      return ''; // Return empty string if there's an error
+    }
+  };
   return (
     <div className="estimateContainer" style={{backgroundColor:'white'}}>
       <div ref={componentRef}>
@@ -39,7 +57,7 @@ const PurchaseReport = () => {
             <div className="poHeadSection">
                 <div className="reportSection" style={{marginTop:'5px', marginBottom:'5px'}}>
                     <p className="orderTitle"  style={{marginBottom:'10px', fontSize:'12px'}}>P/O No: <span className="orderData" style={{color:'red', fontSize:'11px'}}>{orderDetails.poID}</span></p>
-                    <p className="orderTitle">DATE: <span className="orderData" style={{marginLeft:'0.5rem'}}>{orderDetails.issuedDate}</span></p>
+                    <p className="orderTitle">DATE: <span className="orderData" style={{marginLeft:'0.5rem'}}>{formatDate(orderDetails.issuedDate)}</span></p>
                     <p className="orderTitle">TO: <span className="orderData" style={{marginLeft:'1.4rem'}}>{orderDetails.companyName}</span></p>
                 </div>
                 <div className="reportSection">

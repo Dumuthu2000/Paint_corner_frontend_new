@@ -77,6 +77,7 @@ const Drawer = () => {
             <option value="/products">Product Items</option>
             <option value="/vehicles">Vehicles</option>
             <option value="/insurance-companies">Insurance Companies</option>
+            <option value="/purchase-company">Purchase Companies</option>
           </select>
         </div>
         <div id="logoutBtn">

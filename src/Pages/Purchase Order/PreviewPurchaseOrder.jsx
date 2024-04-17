@@ -33,6 +33,25 @@ const PreviewPurchaseOrder = () => {
           })
         }
     },[])
+
+  // Function to format the date to 'YYYY-MM-DD'
+const formatDate = (dateString) => {
+  try {
+    if (!dateString) return ''; // Return empty string if dateString is falsy
+
+    const dateObject = new Date(dateString);
+    if (isNaN(dateObject.getTime())) {
+      // Check if dateObject is invalid (NaN)
+      return ''; // Return empty string for invalid date
+    }
+
+    return dateObject.toISOString().split('T')[0]; // Format date as 'YYYY-MM-DD'
+  } catch (error) {
+    console.error('Error formatting date:', error);
+    return ''; // Return empty string if there's an error
+  }
+};
+
   return (
     <div className="createEstimateContainer">
       <Drawer />
@@ -53,7 +72,7 @@ const PreviewPurchaseOrder = () => {
                 <div>
                   <label htmlFor="">Date:</label>
                   <br />
-                  <input type="text" className="estimateInput" disabled value={orderDetails.issuedDate}/>
+                  <input type="text" className="estimateInput" disabled value={formatDate(orderDetails.issuedDate)}/>
                 </div>
                 <div>
                   <label htmlFor="">Vehicle Name:</label>
