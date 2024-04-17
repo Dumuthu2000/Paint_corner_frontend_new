@@ -29,7 +29,7 @@ import UpdateQuotation from './Pages/Quotation/UpdateQuotation.jsx'
 import PreviewQuotation from './Pages/Quotation/PreviewQuotation.jsx'
 import QuotationReport from './Pages/Quotation/Reports/QuotationReport.jsx'
 import ViewQuotations from './Pages/Quotation/ViewQuotations.jsx'
-import PurchaseCompany from './Pages/More Categories/Purchase Company/purchaseCompany.jsx'
+import PurchaseCompany from './Pages/Purchase Company/PurchaseCompany.jsx'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
 
