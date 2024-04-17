@@ -51,7 +51,7 @@ function App() {
         <Route path='/invoice/insurance/insuranceInvoice' element={<InsuranceInvoice/>}/>
         <Route path='/invoice/insurance/invoiceReport/:jobID' element={<InvoiceReport/>}/>
         <Route path='/products' element={<Products/>}/>
-        <Route path='/vehicles' element={<Vehicles/>}/>s
+        <Route path='/vehicles' element={<Vehicles/>}/>
         <Route path='/insurance-companies' element={<Insurance/>}/>
         <Route path='/invoice/personalInvoice' element={<PersonalInvoice/>}/>
         <Route path='/invoice/personalInvoice-preview' element={<PreviewPersonalInvoice/>}/>
