@@ -16,7 +16,6 @@ const PreviewQuotation = () => {
           .then((res)=>{
               setOrderItems(res.data.quotationItems)
               setOrderDetails(res.data.quotation)
-              console.log(res.data.quotation)
             
           }).catch((err)=>{
               alert(err.message);
@@ -26,7 +25,6 @@ const PreviewQuotation = () => {
           .then((res)=>{
               setOrderItems(res.data.quotationItems)
               setOrderDetails(res.data.quotation)
-              console.log(res.data)
             
           }).catch((err)=>{
               alert(err.message);
@@ -58,7 +56,7 @@ const PreviewQuotation = () => {
                 <div>
                   <label htmlFor="">Vehicle Name:</label>
                   <br />
-                  <input type="text" className="estimateInput" disabled value={orderDetails.VehicleModel+' '+orderDetails.vehicleMake}/>
+                  <input type="text" className="estimateInput" disabled value={orderDetails.vehicleMake+' '+orderDetails.VehicleModel}/>
                 </div>
               </div>
               <div>
@@ -82,7 +80,7 @@ const PreviewQuotation = () => {
           </div>
         </div>
         <div className="table-container-purchase">
-            <h3 className="purchaseTitle">PURCHASE DETAILS</h3>
+            <h3 className="purchaseTitle">QUOTATION DETAILS</h3>
             <table className="custom-table">
                 <thead className="purchaseTblHead">
                 <tr>
@@ -107,11 +105,15 @@ const PreviewQuotation = () => {
           <Link to="/quotation/createQuotation">
             <button className="backBtn">Back</button>
           </Link>
-          <Link to="/quotation/quotation-report">
-            <button className="previewBtn">
-              Print
-            </button>
-          </Link>
+          <Link
+              to={
+                quotationID
+                  ? `/quotation/quotation-report/${quotationID}`
+                  : "/quotation/quotation-report"
+              }
+            >
+              <button className="previewBtn">Print</button>
+            </Link>
         </div>
       </div>
       </div>

@@ -3,27 +3,34 @@ import { useState, useEffect, useRef } from "react";
 import { useReactToPrint } from "react-to-print";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { useParams } from "react-router-dom";
 
 const PurchaseReport = () => {
   const [orderDetails, setOrderDetails] = useState({});
   const [orderItems, setOrderItems] = useState([]);
+  const {poID} = useParams();
 
-  useEffect(() => {
-    axios
-      .get(
-        `${
-          import.meta.env.VITE_API_BASE_URL
-        }/api/purchaseOrder/getPurchaseOrder`
-      )
-      .then((res) => {
-        setOrderItems(res.data.purchaseItems);
-        setOrderDetails(res.data.purchaseOrder);
-        console.log(res.data.purchaseOrder);
+  useEffect(()=>{
+    if(poID){
+      axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/purchaseOrder/getPurchaseOrder/${poID}`)
+      .then((res)=>{
+          setOrderItems(res.data.purchaseItems)
+          setOrderDetails(res.data.purchaseOrder)
+        
+      }).catch((err)=>{
+          alert(err.message);
       })
-      .catch((err) => {
-        alert(err.message);
-      });
-  }, []);
+    }else{
+       axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/purchaseOrder/getPurchaseOrder`)
+      .then((res)=>{
+          setOrderItems(res.data.purchaseItems)
+          setOrderDetails(res.data.purchaseOrder)
+        
+      }).catch((err)=>{
+          alert(err.message);
+      })
+    }
+},[])
 
   const componentRef = useRef();
 
@@ -62,7 +69,7 @@ const PurchaseReport = () => {
                 </div>
                 <div className="reportSection">
                     <p className="orderTitle"  style={{marginRight:'0.7rem'}}>VEHICLE NO: <span className="orderData" style={{marginLeft:'1.45rem'}}>{orderDetails.vehicleNo}</span></p>
-                    <p className="orderTitle" style={{marginBottom:'1rem'}}>VEHICLE MAKE: <span className="orderData" style={{marginLeft:'0.5rem'}}>{orderDetails.vehicleModel+' '+orderDetails.vehicleMake}</span></p>
+                    <p className="orderTitle" style={{marginBottom:'1rem'}}>VEHICLE MAKE: <span className="orderData" style={{marginLeft:'0.5rem'}}>{orderDetails.vehicleMake+' '+orderDetails.vehicleModel}</span></p>
                 </div>
             </div>
           </div>
@@ -103,7 +110,7 @@ const PurchaseReport = () => {
         </div>
       <div className="amountContainer">
         <div className="btnSection">
-          <Link to="/purchase-order/preview-purchaseOrder">
+          <Link to="/purchase-order/createPurchaseOrder">
             <button className="backBtn">Back</button>
           </Link>
           <Link to="/estimate-report">

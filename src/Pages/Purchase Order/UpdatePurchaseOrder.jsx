@@ -52,6 +52,10 @@ const UpdatePurchaseOrder = () => {
   const[itemPrice, setItemPrice] = useState('');
   const[purchaseTableData, setPurchaseTableData] = useState([]);
 
+  const[selectedIndex, setSelectedIndex] = useState(null)
+  const [editingQty, setEditingQty] = useState('');
+  const [editingPrice, setEditingPrice] = useState('');
+
 
   const navigate = useNavigate();
   const {poID} = useParams();
@@ -62,7 +66,6 @@ const UpdatePurchaseOrder = () => {
           .then((res)=>{
               setOrderItems(res.data.purchaseItems)
               setPurchaseData(res.data.purchaseOrder)
-              console.log(res.data.purchaseItems)
             
           }).catch((err)=>{
               alert(err.message);
@@ -131,7 +134,7 @@ const UpdatePurchaseOrder = () => {
             item_id: item.item_id,
             itemName: item.itemName,
             itemQty: item.itemQty,
-            itemPrice: parseFloat(item.itemPrice).toFixed(2),
+            itemPrice: item.itemPrice,
         }));
         setPurchaseTableData(initialPurchaseTableData);
     }, [orderItems]);
@@ -159,7 +162,7 @@ const UpdatePurchaseOrder = () => {
     const newPurchaseOrderData={
         item_id:itemName.itemID,
         itemName: itemName.label, 
-        itemPrice: parseFloat(itemPrice).toFixed(2),
+        itemPrice: itemPrice,
         itemQty: itemQty,  
     }
 
@@ -169,6 +172,35 @@ const UpdatePurchaseOrder = () => {
     setItemPrice('');
   }
 
+  // Handling edit button
+  const editHandler = (index) => {
+    setSelectedIndex(index);
+    // Set the editing states to the current values of the selected row
+    setEditingQty(purchaseTableData[index].itemQty);
+    setEditingPrice(purchaseTableData[index].itemPrice);
+  };
+
+  // Handling update button
+  const updateHandler = (index) => {
+    const updatedPurchaseData = [...purchaseTableData];
+    updatedPurchaseData[index].itemQty = editingQty; // Update with the edited quantity
+    updatedPurchaseData[index].itemPrice = editingPrice; // Update with the edited price
+
+    setPurchaseTableData(updatedPurchaseData);
+    setSelectedIndex(null);
+  };
+
+const deleteHandler = async (index) => {
+    console.log('click')
+    const order_id = poID;
+    const item_id = purchaseTableData[index].item_id;
+    await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/api/purchaseOrder/deletePurchaseOrder/${order_id}`, {
+        data:{item_id}
+    })
+    .then((res) => {
+        window.location.reload()
+    })
+};
   //Handling submit button
   const handleSubmitBtn=async()=>{
     if(!vehicleNo || !vehicleMake || !vehicleModel || !companyName || !issuedDate || !purchaseTableData){
@@ -192,17 +224,6 @@ const UpdatePurchaseOrder = () => {
         })
     }
   }
-const deleteHandler = async (index) => {
-    console.log('click')
-    const order_id = poID;
-    const item_id = purchaseTableData[index].item_id;
-    await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/api/purchaseOrder/deletePurchaseOrder/${order_id}`, {
-        data:{item_id}
-    })
-    .then((res) => {
-        window.location.reload()
-    })
-};
 
   return (
     <div className="createEstimateContainer">
@@ -228,7 +249,7 @@ const deleteHandler = async (index) => {
                                     isSearchable={true}
                                     placeholder="Ex TOYOTA"
                                     className='jobFormText'
-                                    value={vehicleModelOptions.find(option => option.value === vehicleModel)}
+                                    value={vehicleModelOptions.find(option => option.value === vehicleMake)}
                                     onChange={handleSelectVehicleMake}
                                     required
                                 />
@@ -240,7 +261,7 @@ const deleteHandler = async (index) => {
                                     isSearchable={true}
                                     placeholder="EX AXIO-161"
                                     className='jobFormText'
-                                    value={vehicleOptions.find(option => option.value === vehicleMake)}
+                                    value={vehicleOptions.find(option => option.value === vehicleModel)}
                                     onChange={handleSelectVehicleModel}
                                     required
                                 />
@@ -287,20 +308,97 @@ const deleteHandler = async (index) => {
                                 onChange={handleItemName}
                                 required
                             />
-                            <input type="text" className="purchaseInput" id='qtyInput' placeholder='Qty' value={itemQty} onChange={(e)=>{
+                            {/* <input type="text" className="purchaseInput" id='qtyInput' placeholder='Qty' value={itemQty} onChange={(e)=>{
                                 setItemQty(e.target.value)
                             }}/>
                             <input type="text" className="purchaseInput" placeholder='Amount (Rs)' value={itemPrice} onChange={(e)=>{
                                 setItemPrice(e.target.value)
-                            }}/>
+                            }}/> */}
                             <button style={{display:addView}} className="purchaseAddBtn" onClick={handleTableBtn}>Add</button>
                             {/* <button style={{display:updateView}} className="purchaseUpdateBtn" onClick={handleUpdateBtn}>Update</button> */}
                             <div>
-                                <PurchaseTable
-                                    tableData={purchaseTableData}
-                                    handleEdit={(index) => editHandler(index)}
-                                    handleDelete={(index)=>deleteHandler(index)}
-                                />
+                            <div className="table-container">
+                                <table className="custom-table">
+                                    <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Item Name</th>
+                                        <th>Qty</th>
+                                        <th>Amount</th>
+                                        <th>Action</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {purchaseTableData?.map((data, index) => (
+                                        <tr key={index}>
+                                        <td>{index+1}</td>
+                                        <td>{data.itemName}</td>
+                                        <td>
+                                        {selectedIndex === index ? (
+                                            <>
+                                                <input
+                                                    type="text"
+                                                    className='insurancePrice'
+                                                    style={{ padding: "5px", width: "8rem", borderRadius: "2px", }}
+                                                    value={editingQty}
+                                                    onChange={(e) => setEditingQty(e.target.value)}
+                                                />
+                                            </>
+                                            ) : (
+                                            <>
+                                                <input
+                                                    type="text"
+                                                    className='insurancePrice'
+                                                    value={data.itemQty}
+                                                    style={{ padding: "5px", width: "8rem", borderRadius: "2px", color:"#c9184a", fontWeight:"bold"}}
+                                                    disabled
+                                                />
+                                            </>
+                                            )}
+                                        </td>
+                                        <td>
+                                        {selectedIndex === index ? (
+                                            <>
+                                                <input
+                                                    type="text"
+                                                    className='insurancePrice'
+                                                    style={{ padding: "5px", width: "8rem", borderRadius: "2px", }}
+                                                    value={editingPrice}
+                                                    onChange={(e) => setEditingPrice(e.target.value)}
+                                                />
+                                            </>
+                                            ) : (
+                                            <>
+                                                <input
+                                                type="text"
+                                                className='insurancePrice'
+                                                value={data.itemPrice}
+                                                style={{ padding: "5px", width: "8rem", borderRadius: "2px", color:"#c9184a", fontWeight:"bold"}}
+                                                disabled
+                                                />
+                                            </>
+                                            )}
+                                        </td>
+                                        <td >
+                                            <div className="tableBtn">
+                                            {selectedIndex === index ? (
+                                                <>
+                                                <button className='tableUpdateBtn' onClick={() => {updateHandler(index) }}>Update</button>
+                                                </>
+                                            ) : (
+                                                <>
+                                                <button className='editBtn' onClick={() => {editHandler(index) }}>Edit</button>
+                                                <button className='deleteBtn' onClick={()=>{deleteHandler(index)}}>Delete</button>
+                                                </>
+                                            )}
+                                            </div>
+                                        </td>
+                                        </tr>
+                                    ))}
+                                    {/* Add more rows as needed */}
+                                </tbody>
+                                </table>
+                                </div>
                             </div>
                         </div>
                         <button className='poBtn' onClick={handleSubmitBtn}>UPDATE PURCHASE ORDER</button>

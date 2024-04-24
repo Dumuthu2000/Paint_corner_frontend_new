@@ -50,6 +50,7 @@ const UpdateQuotation = () => {
 
   const[quotation, setQuotation] = useState({})
   const[quotationItems, setQuotationItems] = useState([])
+  const[selectedIndex, setSelectedIndex] = useState(null)
 
 
   const navigate = useNavigate();
@@ -79,7 +80,7 @@ const UpdateQuotation = () => {
     const initialQuotationTableData = quotationItems.map((item) => ({
         itemID: item.itemID,
         itemName: item.itemName,
-        amount: parseFloat(item.amount).toFixed(2),
+        amount:item.amount,
     }));
     setQuotationTableData(initialQuotationTableData);
 }, [quotationItems]);
@@ -93,7 +94,6 @@ const UpdateQuotation = () => {
                 label: vehicle.model,
             }));
             setVehicleMakeOptions(VehicleModel);
-            console.log(VehicleModel);
         })
     }
     const fetchVehicleMake=async()=>{
@@ -104,7 +104,6 @@ const UpdateQuotation = () => {
                 label: vehicle.make,
             }));
             setVehicleOptions(vehicleMake);
-            console.log(vehicleMake);
         })
     }
     const fetchCompanyName=async()=>{
@@ -156,7 +155,7 @@ const handleSelectVehicleMake = (vehicleMake) => {
     const newQuotationData={
         itemID:itemName.itemID,
         itemName: itemName.label, 
-        amount: parseFloat(amount).toFixed(2),
+        amount: amount,
     }
 
     setQuotationTableData((prevData)=>[...prevData, newQuotationData]);
@@ -187,6 +186,20 @@ const handleSelectVehicleMake = (vehicleMake) => {
         })
     }
   }
+    //Handling edit btn
+    const editHandler=async(index)=>{
+        setSelectedIndex(index)
+      }
+    
+      //Handling update btn
+    const updateHandler = async (index) => {
+        const updatedQuotationData = [...quotationTableData];
+        updatedQuotationData[index].amount = amount;
+    
+        setQuotationTableData(updatedQuotationData);
+        setSelectedIndex(null);
+        };
+    
 const deleteHandler = async (index) => {
     const qID = quotationID;
     const itemID = quotationTableData[index].itemID;
@@ -224,7 +237,7 @@ const deleteHandler = async (index) => {
                                     isSearchable={true}
                                     placeholder="EX AXIO-161"
                                     className='jobFormText'
-                                    value={vehicleOptions.find(option => option.value === VehicleModel)}
+                                    value={vehicleOptions.find(option => option.value === vehicleMake)}
                                     onChange={handleSelectVehicleModel}
                                     required
                                 />
@@ -236,7 +249,7 @@ const deleteHandler = async (index) => {
                                     isSearchable={true}
                                     placeholder="Ex TOYOTA"
                                     className='jobFormText'
-                                    value={vehicleMakeOptions.find(option => option.value === vehicleMake)}
+                                    value={vehicleMakeOptions.find(option => option.value === VehicleModel)}
                                     onChange={handleSelectVehicleMake}
                                     required
                                 />
@@ -290,15 +303,68 @@ const deleteHandler = async (index) => {
                                 onChange={handleItemName}
                                 required
                             />
-                            <input type="text" className="purchaseInput" placeholder='Amount (Rs)' value={amount} onChange={(e)=>{
-                                setAmount(e.target.value)
-                            }}/>
                             <button style={{display:addView}} className="purchaseAddBtn" onClick={handleTableBtn}>Add</button>
                             <div>
-                                <QuotationTable 
-                                    tableData={quotationTableData}
-                                    handleDelete={(index)=>deleteHandler(index)}
-                                />
+                                 <div className="table-container">
+                                <table className="custom-table">
+                                    <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Item Name</th>
+                                        <th>Amount</th>
+                                        <th>Action</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {quotationTableData?.map((data, index) => (
+                                        <tr key={index}>
+                                        <td>{index+1}</td>
+                                        <td>{data.itemName}</td>
+                                        <td>
+                                        {selectedIndex === index ? (
+                                            <>
+                                                <input
+                                                    type="text"
+                                                    className='insurancePrice'
+                                                    style={{ padding: "5px", width: "8rem", borderRadius: "2px", }}
+                                                    
+                                                    onChange={(e)=>{
+                                                        setAmount(e.target.value)
+                                                    }}
+                                                />
+                                            </>
+                                            ) : (
+                                            <>
+                                                <input
+                                                type="text"
+                                                className='insurancePrice'
+                                                value={data.amount}
+                                                style={{ padding: "5px", width: "8rem", borderRadius: "2px", color:"#c9184a", fontWeight:"bold"}}
+                                                disabled
+                                                />
+                                            </>
+                                            )}
+                                        </td>
+                                        <td >
+                                            <div className="tableBtn">
+                                            {selectedIndex === index ? (
+                                                <>
+                                                <button className='tableUpdateBtn' onClick={() => {updateHandler(index) }}>Update</button>
+                                                </>
+                                            ) : (
+                                                <>
+                                                <button className='editBtn' onClick={() => {editHandler(index) }}>Edit</button>
+                                                <button className='deleteBtn' onClick={()=>{deleteHandler(index)}}>Delete</button>
+                                                </>
+                                            )}
+                                            </div>
+                                        </td>
+                                        </tr>
+                                    ))}
+                                    {/* Add more rows as needed */}
+                                </tbody>
+                                </table>
+                                </div>
                             </div>
                         </div>
                         <button className='poBtn' onClick={handleSubmitBtn}>UPDATE QUOTATION</button>

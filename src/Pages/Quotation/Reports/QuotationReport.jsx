@@ -1,29 +1,35 @@
 import "./quotationReport.css";
 import { useState, useEffect, useRef } from "react";
 import { useReactToPrint } from "react-to-print";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 
 const QuotationReport = () => {
   const [orderDetails, setOrderDetails] = useState({});
   const [orderItems, setOrderItems] = useState([]);
+  const{quotationID} = useParams();
 
-  useEffect(() => {
-    axios
-      .get(
-        `${
-          import.meta.env.VITE_API_BASE_URL
-        }/api/quotation/getQuotation`
-      )
-      .then((res) => {
-        setOrderItems(res.data.quotationItems)
-              setOrderDetails(res.data.quotation)
-              console.log(res.data)
+  useEffect(()=>{
+    if(quotationID){
+      axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/quotation/getQuotation/${quotationID}`)
+      .then((res)=>{
+          setOrderItems(res.data.quotationItems)
+          setOrderDetails(res.data.quotation)
+        
+      }).catch((err)=>{
+          alert(err.message);
       })
-      .catch((err) => {
-        alert(err.message);
-      });
-  }, []);
+    }else{
+       axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/quotation/getQuotation`)
+      .then((res)=>{
+          setOrderItems(res.data.quotationItems)
+          setOrderDetails(res.data.quotation)
+        
+      }).catch((err)=>{
+          alert(err.message);
+      })
+    }
+},[])
 
   const componentRef = useRef();
 
@@ -40,7 +46,7 @@ const QuotationReport = () => {
                 <div className="reportSection" style={{marginTop:'5px', marginBottom:'5px'}}>
                     <p className="orderTitle"  style={{marginBottom:'5px', fontSize:'12px'}}>INSURANCE: <span className="orderData" style={{fontSize:'11px', marginLeft:'1.7rem'}}>{orderDetails.insuranceName}</span></p>
                     <p className="orderTitle"  style={{marginRight:'0.7rem'}}>VEHICLE NO: <span className="orderData" style={{marginLeft:'1.5rem'}}>{orderDetails.vehicleNo}</span></p>
-                    <p className="orderTitle" style={{marginBottom:'1rem'}}>VEHICLE MAKE: <span className="orderData" style={{marginLeft:'0.5rem'}}>{orderDetails.VehicleModel+' '+orderDetails.vehicleMake}</span></p>
+                    <p className="orderTitle" style={{marginBottom:'1rem'}}>VEHICLE MAKE: <span className="orderData" style={{marginLeft:'0.5rem'}}>{orderDetails.vehicleMake+' '+orderDetails.VehicleModel}</span></p>
                 </div>
             </div>
           </div>
@@ -77,7 +83,7 @@ const QuotationReport = () => {
       </div>
       <div className="amountContainer">
         <div className="btnSection">
-          <Link to="/quotation/preview-quotation">
+          <Link to="/quotation/createQuotation">
             <button className="backBtn">Back</button>
           </Link>
           <Link to="/estimate-report">

@@ -17,12 +17,47 @@ const QuotationTable = (props) => {
             <tr key={index}>
               <td>{index+1}</td>
               <td>{data.itemName}</td>
-              <td>{data.amount}</td>
+              {/* <td>{data.amount}</td> */}
               <td>
+              {props.disableInput === index ? (
+                  <>
+                    <input
+                      type="text"
+                      className='insurancePrice'
+                      style={{ padding: "5px", width: "8rem", borderRadius: "2px", }}
+                      // value={data.amount}
+                      onChange={(e) => props.handleQuotationPrice(e.target.value, index)
+
+                    }
+                    />
+                  </>
+                ) : (
+                  <>
+                    <input
+                      type="text"
+                      className='insurancePrice'
+                      style={{ padding: "5px", width: "8rem", borderRadius: "2px", color:"#c9184a", fontWeight:"bold", display:props.InputDisplay}}
+                      // value={data.insurancePrice}
+                      disabled
+                    />
+                  </>
+                )}
+              </td>
+              <td style={{display:props.insuranceDisplay}}>
                 <div className="tableBtn">
-                  <button className='deleteBtn' onClick={()=>{props.handleDelete(index)}}>Delete</button>
+                  {props.disableInput === index ? (
+                    <>
+                      <button className='tableUpdateBtn' onClick={() => {props.handleUpdate(index) }}>Update</button>
+                    </>
+                  ) : (
+                    <>
+                      <button className='editBtn' onClick={() => { props.handleEdit(index) }}>Edit</button>
+                      <button className='deleteBtn' onClick={()=>{props.handleDelete(index)}}>Delete</button>
+                    </>
+                  )}
                 </div>
               </td>
+              
             </tr>
           ))}
         {/* Add more rows as needed */}

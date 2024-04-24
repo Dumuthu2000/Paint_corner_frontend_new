@@ -16,7 +16,6 @@ const PreviewPurchaseOrder = () => {
           .then((res)=>{
               setOrderItems(res.data.purchaseItems)
               setOrderDetails(res.data.purchaseOrder)
-              console.log(res.data.purchaseOrder)
             
           }).catch((err)=>{
               alert(err.message);
@@ -26,7 +25,6 @@ const PreviewPurchaseOrder = () => {
           .then((res)=>{
               setOrderItems(res.data.purchaseItems)
               setOrderDetails(res.data.purchaseOrder)
-              console.log(res.data.purchaseOrder)
             
           }).catch((err)=>{
               alert(err.message);
@@ -77,7 +75,7 @@ const formatDate = (dateString) => {
                 <div>
                   <label htmlFor="">Vehicle Name:</label>
                   <br />
-                  <input type="text" className="estimateInput" disabled value={orderDetails.vehicleModel+' '+orderDetails.vehicleMake}/>
+                  <input type="text" className="estimateInput" disabled value={orderDetails.vehicleMake+' '+orderDetails.vehicleModel}/>
                 </div>
               </div>
               <div>
@@ -128,11 +126,15 @@ const formatDate = (dateString) => {
           <Link to="/purchase-order/createPurchaseOrder">
             <button className="backBtn">Back</button>
           </Link>
-          <Link to="/purchase-order/purchaseOrder-report">
-            <button className="previewBtn">
-              Print
-            </button>
-          </Link>
+          <Link
+              to={
+                poID
+                  ? `/purchase-order/purchaseOrder-report/${poID}`
+                  : "/purchase-order/purchaseOrder-report"
+              }
+            >
+              <button className="previewBtn">Print</button>
+            </Link>
         </div>
       </div>
       </div>

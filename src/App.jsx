@@ -63,11 +63,13 @@ function App() {
         <Route path='/purchase-order/update-purchaseOrder/:poID' element={<UpdatePurchaseOrder/>}/>
         <Route path='/purchase-order/preview-purchaseOrder/:poID' element={<PreviewPurchaseOrder/>}/>
         <Route path='/purchase-order/purchaseOrder-report' element={<PurchaseReport/>}/>
+        <Route path='/purchase-order/purchaseOrder-report/:poID' element={<PurchaseReport/>}/>
         <Route path='/quotation/createQuotation' element={<CreateQuotation/>}/>
         <Route path='/quotation/update-quotation/:quotationID' element={<UpdateQuotation/>}/>
         <Route path='/quotation/preview-quotation' element={<PreviewQuotation/>}/>
         <Route path='/quotation/preview-quotation/:quotationID' element={<PreviewQuotation/>}/>
         <Route path='/quotation/quotation-report' element={<QuotationReport/>}/>
+        <Route path='/quotation/quotation-report/:quotationID' element={<QuotationReport/>}/>
         <Route path='/quotations' element={<ViewQuotations/>}/>
       </Routes>
     </BrowserRouter>

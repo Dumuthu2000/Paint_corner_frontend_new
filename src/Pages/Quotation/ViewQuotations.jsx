@@ -12,8 +12,7 @@ const ViewQuotations = () => {
     useEffect(()=>{
         axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/quotation/quotations`)
         .then((res)=>{
-            setOrderDetails(res.data)
-            console.log(res.data)      
+            setOrderDetails(res.data)   
         }).catch((err)=>{
             alert(err.message);
         })

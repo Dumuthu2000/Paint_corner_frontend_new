@@ -23,6 +23,11 @@ const CreateQuotation = () => {
   const [fontColor, setFontColor] = useState("#ff0a54")
   const [iconColor, setIconColor] = useState("#ff0a54")
 
+  //Job Data
+  const[jobID, setJobID] = useState(0);
+  const[estimateItems, setEstimateItems] = useState([]);
+  const[supplimentryItems, setSupplimentryItems] = useState([]);
+  const[quotationItems, setQuotationItems] = useState([]);
   
   //Options
   const [vehicleOptions, setVehicleOptions] = useState([]);
@@ -31,11 +36,7 @@ const CreateQuotation = () => {
   const [itemOptions, setItemOptions] = useState([]);
 
    //Product Model
-  const [openProductModel, setOpenProductModel] = useState(false);
-  const [addView, setAddView] = useState('block')
-  const [updateView, setUpdateView] = useState('none')
-  const [updateIndex, setUpdateIndex] = useState(null);
-
+  const[openProductModel, setOpenProductModel] = useState(false);
   const[vehicleNo, setVehicleNo] = useState(null);
   const[vehicleMake, setVehicleModel]= useState(null);
   const[vehicleModel, setVehicleModels]= useState(null);
@@ -45,8 +46,9 @@ const CreateQuotation = () => {
 
   //Purchase Item Containers
   const[itemName, setItemName] = useState(null);
-  const[amount, setAmount] = useState('');
+  const[amount, setAmount] = useState(0);
   const[quotationTableData, setQuotationTableData] = useState([]);
+  const[selectedIndex, setSelectedIndex] = useState(null)
 
   const navigate = useNavigate();
 
@@ -64,7 +66,6 @@ const CreateQuotation = () => {
     const fetchVehicleMake=async()=>{
         await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/job/vehicle/make`)
         .then((res)=>{
-            console.log(res.data)
             const vehicleMakes = res.data.map((vehicle)=>({
                 value: vehicle.make,
                 label: vehicle.make,
@@ -116,18 +117,78 @@ const CreateQuotation = () => {
     const handleSelectInsuranceName=(insuranceName)=>{
         setInsuranceName(insuranceName.value);
     }
+ //-------------------------------------------------------------------------job number btn handling---------------------------------------
+ 
+ const handleJobSearchBtn = async()=>{
+    const tableCategory = "Replacement";
+    axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/quotation/getItems`,{tableCategory, jobID})
+    .then((res)=>{
+        setEstimateItems(res.data.estimateItems)
+        setSupplimentryItems(res.data.supplimentryItems)
 
+        axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/job/getJobDetails/${jobID}`)
+        .then((res)=>{
+            const result = res.data[0];
+            setVehicleNo(result.vehicleNo)
+            setVehicleModel(result.vehicleMake);
+            setVehicleModels(result.vehicleModel);
+            setInsuranceName(result.insuranceName)
+            setCompanyName(result.companyName)
+            setCompanyMobile(result.companyMobile)
+        }).catch((err)=>{
+            alert(err.message)
+        })
+    }).catch((err)=>{
+        alert(err.message)
+    })
+ }
+
+ useEffect(() => {
+    const combinedItems = [...estimateItems, ...supplimentryItems];
+    setQuotationItems(combinedItems);
+  }, [estimateItems, supplimentryItems]);
+
+  useEffect(() => {
+    const initialQuotationTableData = quotationItems.map((item) => ({
+        itemID: item.itemID,
+        itemName: item.itemName,
+        amount: parseFloat(item.amount).toFixed(2),
+    }));
+    setQuotationTableData(initialQuotationTableData);
+}, [quotationItems]);
+
+//Handling add btn
   const handleTableBtn=async()=>{
     const newQuotationData={
         itemID:itemName.itemID,
         itemName: itemName.label, 
-        amount: parseFloat(amount).toFixed(2),
+        amount: amount,
     }
-
     setQuotationTableData((prevData)=>[...prevData, newQuotationData]);
     setItemName(null);
     setAmount('');
   }
+
+  //Handling edit btn
+  const editHandler=async(index)=>{
+    setSelectedIndex(index)
+  }
+
+  //Handling update btn
+const updateHandler = async (index) => {
+    const updatedQuotationData = [...quotationTableData];
+    updatedQuotationData[index].amount = amount;
+
+    setQuotationTableData(updatedQuotationData);
+    setSelectedIndex(null);
+    };
+
+    //Handling delete btn
+const deleteHandler=async(index)=>{
+        console.log(index + 1, "Need to delete")
+        const updatedQuotationData = quotationTableData.filter((_, i) => i !== index);
+        setQuotationTableData(updatedQuotationData);
+    }
 
   //Handling submit button
   const handleSubmitBtn=async()=>{
@@ -152,44 +213,19 @@ const CreateQuotation = () => {
         })
     }
   }
-
-//   const editHandler=async(index)=>{
-//     setUpdateIndex(index)
-//     setAddView('none')
-//     setUpdateView('block')
-//     const {itemName, amount} = quotationTableData[index];
-//     setItemName({label: itemName, value: itemName});
-//     setAmount(amount)
-//   }
-
-//   const handleUpdateBtn = async () => {
-//     if (updateIndex !== null) {
-//         const updatedQuotationData = [...quotationTableData];
-//         updatedQuotationData[updateIndex] = {
-//             itemID: itemName.itemID,
-//             itemName: itemName.label,
-//             amount: parseFloat(amount).toFixed(2),
-//         };
-//         setQuotationTableData(updatedQuotationData);
-//         setItemName(null);
-//         setAmount('');
-//         setAddView('block')
-//         setUpdateView('none')
-//     }
-// };
-
-const deleteHandler=async(index)=>{
-    console.log(index + 1, "Need to delete")
-    const updatedQuotationData = quotationTableData.filter((_, i) => i !== index);
-     // Update the state with the new array
-    setQuotationTableData(updatedQuotationData);
-}
   return (
     <div className="createEstimateContainer">
         <Drawer/>
         <div className="estimateContainer">
             <Navbar className='navbarComponent' text="Quotation / Create Quotation"/>
             <Error value={erroVisible} errorName={error} backColor={backgroundColor} border={borderColor} font={fontColor} icon={iconColor}/>
+            <div className="searchJob">
+                <label htmlFor="" style={{fontSize:"18px"}}>Seach Job No:</label>
+                <input type="text" placeholder='Enter Job No'  className='searchInput' onChange={(e)=>{
+                  setJobID(e.target.value)
+                }}/>
+                <button className='searchBtn' onClick={handleJobSearchBtn}>Seach</button>
+              </div>
             <div className='mainContainerForQuotation'>
                     <div className="jobDetails" style={{width:'70%'}}>
                         <h2 style={{marginBottom:"20px", color:"red"}}>Details of Quotation</h2>
@@ -199,7 +235,7 @@ const deleteHandler=async(index)=>{
                                 <label htmlFor="">Vehicle No:</label><br />
                                 <input type="text" className='jobFormText' id='purchaseInput' placeholder='Ex. CAC-2454' onChange={(e)=>{
                                     setVehicleNo(e.target.value)
-                                }}/>
+                                }} value={vehicleNo}/>
                             </div>
                             <div className="textContainer">
                                 <label htmlFor="">Vehicle Make:</label><br />
@@ -208,7 +244,7 @@ const deleteHandler=async(index)=>{
                                     isSearchable={true}
                                     placeholder="Ex TOYOTA"
                                     className='jobFormText'
-                                    // value={vehicleModel}
+                                    value={vehicleModelOptions.find(option => option.value === vehicleMake)}
                                     onChange={handleSelectVehicleMake}
                                     required
                                 />
@@ -220,7 +256,7 @@ const deleteHandler=async(index)=>{
                                     isSearchable={true}
                                     placeholder="EX AXIO-161"
                                     className='jobFormText'
-                                    // value={vehicleMake}
+                                    value={vehicleOptions.find(option => option.value === vehicleModel)}
                                     onChange={handleSelectVehicleModel}
                                     required
                                 />
@@ -234,20 +270,20 @@ const deleteHandler=async(index)=>{
                                     isSearchable={true}
                                     placeholder="Select Insurance"
                                     className='jobFormText'
-                                    // value={companyName}
+                                    value={insuranceOptions.find(option => option.value === insuranceName)}
                                     onChange={handleSelectInsuranceName}
                                     required
                             />
                             </div>
                             <div className="textContainer">
                                 <label htmlFor="">Company Name:</label><br />
-                                <input type="text"  className='jobFormText' style={{padding:'8px', border:'1px solid #ccc', color:'black'}} placeholder='Ex. Upul Motors' onChange={(e)=>{
+                                <input type="text"  className='jobFormText' style={{padding:'8px', border:'1px solid #ccc', color:'black'}} placeholder='Enter company name' onChange={(e)=>{
                                     setCompanyName(e.target.value)
                                 }}/>
                             </div>
                             <div className="textContainer" style={{marginRight:'1rem'}}>
                                 <label htmlFor="">Mobile No:</label><br />
-                                <input type="text"  className='jobFormText' style={{padding:'8px', border:'1px solid #ccc', color:'black'}} placeholder='Ex. 07x xxx xx xx' onChange={(e)=>{
+                                <input type="text"  className='jobFormText' style={{padding:'8px', border:'1px solid #ccc', color:'black'}} placeholder='Enter company mobile no' onChange={(e)=>{
                                     setCompanyMobile(e.target.value)
                                 }}/>
                             </div>
@@ -274,17 +310,66 @@ const deleteHandler=async(index)=>{
                                 onChange={handleItemName}
                                 required
                             />
-                            <input type="text" className="purchaseInput" placeholder='Amount (Rs)' value={amount} onChange={(e)=>{
-                                setAmount(e.target.value)
-                            }}/>
-                            <button style={{display:addView}} className="purchaseAddBtn" onClick={handleTableBtn}>Add</button>
-                            {/* <button style={{display:updateView}} className="purchaseUpdateBtn" onClick={handleUpdateBtn}>Update</button> */}
+                            <button  className="purchaseAddBtn" onClick={handleTableBtn}>Add</button>
                             <div>
-                                <QuotationTable 
-                                    tableData={quotationTableData}
-                                    // handleEdit={(index) => editHandler(index)}
-                                    handleDelete={(index)=>deleteHandler(index)}
-                                />
+                              <div className="table-container">
+                                <table className="custom-table">
+                                    <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Item Name</th>
+                                        <th>Amount</th>
+                                        <th>Action</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {quotationTableData?.map((data, index) => (
+                                        <tr key={index}>
+                                        <td>{index+1}</td>
+                                        <td>{data.itemName}</td>
+                                        <td>
+                                        {selectedIndex === index ? (
+                                            <>
+                                                <input
+                                                    type="text"
+                                                    className='insurancePrice'
+                                                    style={{ padding: "5px", width: "8rem", borderRadius: "2px", }}
+                                                    onChange={(e)=>{
+                                                        setAmount(e.target.value)
+                                                    }}
+                                                />
+                                            </>
+                                            ) : (
+                                            <>
+                                                <input
+                                                type="text"
+                                                className='insurancePrice'
+                                                style={{ padding: "5px", width: "8rem", borderRadius: "2px", color:"#c9184a", fontWeight:"bold"}}
+                                                disabled
+                                                />
+                                            </>
+                                            )}
+                                        </td>
+                                        <td >
+                                            <div className="tableBtn">
+                                            {selectedIndex === index ? (
+                                                <>
+                                                <button className='tableUpdateBtn' onClick={() => {updateHandler(index) }}>Update</button>
+                                                </>
+                                            ) : (
+                                                <>
+                                                <button className='editBtn' onClick={() => {editHandler(index) }}>Edit</button>
+                                                <button className='deleteBtn' onClick={()=>{deleteHandler(index)}}>Delete</button>
+                                                </>
+                                            )}
+                                            </div>
+                                        </td>
+                                        </tr>
+                                    ))}
+                                    {/* Add more rows as needed */}
+                                </tbody>
+                                </table>
+                                </div>
                             </div>
                         </div>
                         <button className='poBtn' onClick={handleSubmitBtn}>SUBMIT QUOTATION</button>
