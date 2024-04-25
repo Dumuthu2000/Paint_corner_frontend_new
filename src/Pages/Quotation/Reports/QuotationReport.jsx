@@ -2,6 +2,8 @@ import "./quotationReport.css";
 import { useState, useEffect, useRef } from "react";
 import { useReactToPrint } from "react-to-print";
 import { Link, useParams } from "react-router-dom";
+import reportHeader from '../../../assets/header.png'
+import reportFooter from '../../../assets/footer.png'
 import axios from "axios";
 
 const QuotationReport = () => {
@@ -40,6 +42,7 @@ const QuotationReport = () => {
     <div className="estimateContainer" style={{backgroundColor:'white'}}>
       <div ref={componentRef}>
         <div className="mainContainer">
+          <img src= {reportHeader} alt="" style={{width:'100%', margin:'1px auto'}}/>
           <h3 className="purchaseReportTitle">QUOTATION</h3>
           <div className="purchaseReportContainer">
             <div className="poHeadSectionForQuotation">
@@ -65,9 +68,9 @@ const QuotationReport = () => {
             <tbody>
               {orderItems.map((data, index) => (
                 <tr key={index}>
-                  <td style={{fontSize:'11px'}}>{index + 1}</td>
-                  <td style={{fontSize:'11px'}}>{data.itemName}</td>
-                  <td style={{fontSize:'11px', textAlign:'end'}}>{parseFloat(data.amount).toFixed(2)}</td>
+                  <td style={{fontSize:'12px'}}>{index + 1}</td>
+                  <td style={{fontSize:'12px'}}>{data.itemName}</td>
+                  <td style={{fontSize:'12px', textAlign:'end'}}>{parseFloat(data.amount).toFixed(2)}</td>
                 </tr>
               ))}
             </tbody>
@@ -80,6 +83,7 @@ const QuotationReport = () => {
             <p>.............................................</p>
             <p style={{fontSize:'13px'}}>SERVICE ADVISOR SIGNATURE</p>
         </div>
+        {/* <img src= {reportFooter} alt="" style={{width:'100%', margin:'1px auto'}}/> */}
       </div>
       <div className="amountContainer">
         <div className="btnSection">

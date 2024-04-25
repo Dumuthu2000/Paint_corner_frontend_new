@@ -17,10 +17,10 @@ const PersonalInvoiceTable = (props) => {
         <tbody>
           {props.tableData?.map((data, index) => (
             <tr key={index}>
-              <td style={{fontSize:'10px'}}>{index + 1}</td>
-              <td style={{fontSize:'10px'}}>{data.itemName}</td>
-              <td style={{ display: props.display, fontSize:'10px' }}>{data.itemValue}</td>
-              <td style={{textAlign:"end", fontSize:'10px' }}>{parseFloat(data.itemPrice).toFixed(2)}</td>
+              <td style={{fontSize:'12px'}}>{index + 1}</td>
+              <td style={{fontSize:'12px'}}>{data.itemName}</td>
+              <td style={{ display: props.display, fontSize:'12px' }}>{data.itemValue}</td>
+              <td style={{textAlign:"end", fontSize:'12px' }}>{parseFloat(data.itemPrice).toFixed(2)}</td>
               <td style={{textAlign:"center", display:props.view}}>
                 <button className='deleteBtn' onClick={() => { props.handleDelete(data.invoiceID) }}>Delete</button>
               </td>

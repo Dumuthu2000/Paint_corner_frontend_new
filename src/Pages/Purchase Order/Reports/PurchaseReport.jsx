@@ -4,6 +4,7 @@ import { useReactToPrint } from "react-to-print";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import reportHeader from '../../../assets/header.png'
 
 const PurchaseReport = () => {
   const [orderDetails, setOrderDetails] = useState({});
@@ -59,6 +60,7 @@ const PurchaseReport = () => {
     <div className="estimateContainer" style={{backgroundColor:'white'}}>
       <div ref={componentRef}>
         <div className="mainContainer">
+        <img src= {reportHeader} alt="" style={{width:'100%', margin:'1px auto'}}/>
           <h3 className="purchaseReportTitle">PURCHASE ORDER</h3>
           <div className="purchaseReportContainer">
             <div className="poHeadSection">
@@ -88,10 +90,10 @@ const PurchaseReport = () => {
             <tbody>
               {orderItems.map((data, index) => (
                 <tr key={index}>
-                  <td style={{fontSize:'11px'}}>{index + 1}</td>
-                  <td style={{fontSize:'11px'}}>{data.itemName}</td>
-                  <td style={{fontSize:'11px',  textAlign:'center'}}>{data.itemQty}</td>
-                  <td style={{fontSize:'11px', textAlign:'end'}}>{parseFloat(data.itemPrice).toFixed(2)}</td>
+                  <td style={{fontSize:'12px'}}>{index + 1}</td>
+                  <td style={{fontSize:'12px'}}>{data.itemName}</td>
+                  <td style={{fontSize:'12px',  textAlign:'center'}}>{data.itemQty}</td>
+                  <td style={{fontSize:'12px', textAlign:'end'}}>{parseFloat(data.itemPrice).toFixed(2)}</td>
                 </tr>
               ))}
             </tbody>
