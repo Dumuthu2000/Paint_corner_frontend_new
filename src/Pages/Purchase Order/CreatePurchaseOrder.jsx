@@ -41,7 +41,7 @@ const CreatePurchaseOrder = () => {
   const[vehicleMake, setVehicleModel]= useState(null);
   const[vehicleModel, setVehicleModels]= useState(null);
   const[companyName, setCompanyName] = useState(null);
-  const[issuedDate, setIssuedDate] = useState(null);
+  const[issuedDate, setIssuedDate] = useState(new Date());
 
   //Purchase Item Container
   const[itemName, setItemName] = useState(null);
@@ -137,9 +137,8 @@ const CreatePurchaseOrder = () => {
                 setVehicleNo(result.vehicleNo)
                 setVehicleModel(result.vehicleMake);
                 setVehicleModels(result.vehicleModel);
-                setCompanyName(result.companyName)
-                setIssuedDate(result.issuedDate)
-                console.log(result)
+                // setCompanyName(result.companyName)
+                // setIssuedDate(result.issuedDate)
             }).catch((err)=>{
                 alert(err.message)
             })
@@ -157,8 +156,8 @@ const CreatePurchaseOrder = () => {
         const initialPurchaseTableData = purchaseItems.map((item) => ({
             item_id: item.itemID,
             itemName: item.itemName,
-            itemPrice: parseFloat(item.amount).toFixed(2),
-            itemQty: itemQty,  
+            itemPrice: '',
+            itemQty: '',  
         }));
         setPurchaseTableData(initialPurchaseTableData);
     }, [purchaseItems]);
@@ -167,8 +166,8 @@ const CreatePurchaseOrder = () => {
     const newPurchaseOrderData={
         item_id:itemName.itemID,
         itemName: itemName.label, 
-        itemPrice: itemPrice,
-        itemQty: itemQty,  
+        itemPrice: '',
+        itemQty: '',  
     }
 
     setPurchaseTableData((prevData)=>[...prevData, newPurchaseOrderData]);
@@ -179,6 +178,13 @@ const CreatePurchaseOrder = () => {
     //Handling edit btn
     const editHandler=async(index)=>{
         setSelectedIndex(index)
+        if (selectedIndex === index) {
+            setItemQty(purchaseTableData[index].itemQty);
+            setItemPrice(purchaseTableData[index].itemPrice);
+          } else {
+            setItemQty(null); 
+            setItemPrice(null); 
+          }
       }
     
       //Handling update btn
@@ -192,10 +198,14 @@ const CreatePurchaseOrder = () => {
         };
     
         //Handling delete btn
-    const deleteHandler=async(index)=>{
-            const updatedPurchaseData = purchaseTableData.filter((_, i) => i !== index);
+        const deleteHandler = (index) => {
+            const updatedPurchaseData = [...purchaseTableData];
+            updatedPurchaseData.splice(index, 1); // Remove the item at 'index'
+        
             setPurchaseTableData(updatedPurchaseData);
-        }
+        };
+        
+        
 
   //Handling submit button
   const handleSubmitBtn=async()=>{
@@ -286,7 +296,12 @@ const CreatePurchaseOrder = () => {
                             </div>
                             <div className="textContainer">
                                 <label htmlFor="">Issued Date:</label><br />
-                                <DatePicker selected={issuedDate} onChange={(date)=>setIssuedDate(date)} placeholderText='Select Date' className='jobFormText' id='purchaseIssuedDate'/>
+                                <DatePicker 
+                                selected={issuedDate} 
+                                onChange={(date)=>setIssuedDate(date)} 
+                                placeholderText='Select Date' 
+                                className='jobFormText' 
+                                id='purchaseIssuedDate'/>
                             </div>
                         </div>
                         </form>
@@ -332,71 +347,66 @@ const CreatePurchaseOrder = () => {
                                     </thead>
                                     <tbody>
                                     {purchaseTableData?.map((data, index) => (
-                                        <tr key={index}>
-                                        <td>{index+1}</td>
+                                    <tr key={index}>
+                                        <td>{index + 1}</td>
                                         <td>{data.itemName}</td>
                                         <td>
-                                        {selectedIndex === index ? (
-                                            <>
+                                            {selectedIndex === index ? (
                                                 <input
                                                     type="text"
-                                                    className='insurancePrice'
-                                                    style={{ padding: "5px", width: "8rem", borderRadius: "2px", }}
-                                                    onChange={(e)=>{
-                                                        setItemQty(e.target.value)
+                                                    className="insurancePrice"
+                                                    style={{ padding: "5px", width: "8rem", borderRadius: "2px" }}
+                                                    value={itemQty}
+                                                    onChange={(e) => {
+                                                        setItemQty(e.target.value);
                                                     }}
                                                 />
-                                            </>
                                             ) : (
-                                            <>
                                                 <input
                                                     type="text"
-                                                    className='insurancePrice'
-                                                    style={{ padding: "5px", width: "8rem", borderRadius: "2px", color:"#c9184a", fontWeight:"bold"}}
+                                                    className="insurancePrice"
+                                                    style={{ padding: "5px", width: "8rem", borderRadius: "2px", color: "#c9184a", fontWeight: "bold" }}
+                                                    value={data.itemQty} // Display itemQty from the data array
                                                     disabled
                                                 />
-                                            </>
                                             )}
                                         </td>
                                         <td>
-                                        {selectedIndex === index ? (
-                                            <>
+                                            {selectedIndex === index ? (
                                                 <input
                                                     type="text"
-                                                    className='insurancePrice'
-                                                    style={{ padding: "5px", width: "8rem", borderRadius: "2px", }}
-                                                    onChange={(e)=>{
-                                                        setItemPrice(e.target.value)
+                                                    className="insurancePrice"
+                                                    style={{ padding: "5px", width: "8rem", borderRadius: "2px" }}
+                                                    value={itemPrice}
+                                                    onChange={(e) => {
+                                                        setItemPrice(e.target.value);
                                                     }}
                                                 />
-                                            </>
                                             ) : (
-                                            <>
                                                 <input
-                                                type="text"
-                                                className='insurancePrice'
-                                                style={{ padding: "5px", width: "8rem", borderRadius: "2px", color:"#c9184a", fontWeight:"bold"}}
-                                                disabled
+                                                    type="text"
+                                                    className="insurancePrice"
+                                                    style={{ padding: "5px", width: "8rem", borderRadius: "2px", color: "#c9184a", fontWeight: "bold" }}
+                                                    value={data.itemPrice} // Display itemPrice from the data array
+                                                    disabled
                                                 />
-                                            </>
                                             )}
                                         </td>
-                                        <td >
+                                        <td>
                                             <div className="tableBtn">
-                                            {selectedIndex === index ? (
-                                                <>
-                                                <button className='tableUpdateBtn' onClick={() => {updateHandler(index) }}>Update</button>
-                                                </>
-                                            ) : (
-                                                <>
-                                                <button className='editBtn' onClick={() => {editHandler(index) }}>Edit</button>
-                                                <button className='deleteBtn' onClick={()=>{deleteHandler(index)}}>Delete</button>
-                                                </>
-                                            )}
+                                                {selectedIndex === index ? (
+                                                    <button className="tableUpdateBtn" onClick={() => updateHandler(index)}>Update</button>
+                                                ) : (
+                                                    <>
+                                                        <button className="editBtn" onClick={() => editHandler(index)}>Edit</button>
+                                                        <button className="deleteBtn" onClick={() => deleteHandler(index)}>Delete</button>
+                                                    </>
+                                                )}
                                             </div>
                                         </td>
-                                        </tr>
-                                    ))}
+                                    </tr>
+                                ))}
+
                                     {/* Add more rows as needed */}
                                 </tbody>
                                 </table>
@@ -412,3 +422,4 @@ const CreatePurchaseOrder = () => {
 }
 
 export default CreatePurchaseOrder
+

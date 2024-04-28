@@ -66,6 +66,7 @@ const UpdatePurchaseOrder = () => {
           .then((res)=>{
               setOrderItems(res.data.purchaseItems)
               setPurchaseData(res.data.purchaseOrder)
+              console.log(res.data.purchaseOrder)
             
           }).catch((err)=>{
               alert(err.message);

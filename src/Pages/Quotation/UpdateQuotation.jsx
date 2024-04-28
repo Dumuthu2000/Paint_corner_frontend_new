@@ -155,7 +155,7 @@ const handleSelectVehicleMake = (vehicleMake) => {
     const newQuotationData={
         itemID:itemName.itemID,
         itemName: itemName.label, 
-        amount: amount,
+        amount: '',
     }
 
     setQuotationTableData((prevData)=>[...prevData, newQuotationData]);

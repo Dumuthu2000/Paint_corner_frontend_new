@@ -46,7 +46,7 @@ const CreateQuotation = () => {
 
   //Purchase Item Containers
   const[itemName, setItemName] = useState(null);
-  const[amount, setAmount] = useState(0);
+  const[amount, setAmount] = useState('');
   const[quotationTableData, setQuotationTableData] = useState([]);
   const[selectedIndex, setSelectedIndex] = useState(null)
 
@@ -152,7 +152,8 @@ const CreateQuotation = () => {
     const initialQuotationTableData = quotationItems.map((item) => ({
         itemID: item.itemID,
         itemName: item.itemName,
-        amount: parseFloat(item.amount).toFixed(2),
+        // amount: parseFloat(item.amount).toFixed(2),
+        amount: '',
     }));
     setQuotationTableData(initialQuotationTableData);
 }, [quotationItems]);
@@ -170,9 +171,19 @@ const CreateQuotation = () => {
   }
 
   //Handling edit btn
-  const editHandler=async(index)=>{
-    setSelectedIndex(index)
-  }
+//   const editHandler=async(index)=>{
+//     setSelectedIndex(index)
+//   }
+const editHandler = (index) => {
+    setSelectedIndex(index);
+    // If selectedIndex matches the current index, set the amount to the current row's amount
+    if (selectedIndex === index) {
+      setAmount(quotationTableData[index].amount);
+    } else {
+      setAmount(null);
+    }
+  };
+  
 
   //Handling update btn
 const updateHandler = async (index) => {
@@ -181,14 +192,17 @@ const updateHandler = async (index) => {
 
     setQuotationTableData(updatedQuotationData);
     setSelectedIndex(null);
+    setAmount('');
     };
 
     //Handling delete btn
-const deleteHandler=async(index)=>{
-        console.log(index + 1, "Need to delete")
-        const updatedQuotationData = quotationTableData.filter((_, i) => i !== index);
+    const deleteHandler = (index) => {
+        const updatedQuotationData = [...quotationTableData];
+        updatedQuotationData.splice(index, 1); // Remove the item at the specified index
         setQuotationTableData(updatedQuotationData);
-    }
+    };
+    
+    
 
   //Handling submit button
   const handleSubmitBtn=async()=>{
@@ -323,51 +337,47 @@ const deleteHandler=async(index)=>{
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    {quotationTableData?.map((data, index) => (
+                                    {quotationTableData.map((data, index) => (
                                         <tr key={index}>
-                                        <td>{index+1}</td>
-                                        <td>{data.itemName}</td>
-                                        <td>
-                                        {selectedIndex === index ? (
-                                            <>
-                                                <input
-                                                    type="text"
-                                                    className='insurancePrice'
-                                                    style={{ padding: "5px", width: "8rem", borderRadius: "2px", }}
-                                                    onChange={(e)=>{
-                                                        setAmount(e.target.value)
-                                                    }}
-                                                />
-                                            </>
-                                            ) : (
-                                            <>
-                                                <input
-                                                type="text"
-                                                className='insurancePrice'
-                                                style={{ padding: "5px", width: "8rem", borderRadius: "2px", color:"#c9184a", fontWeight:"bold"}}
-                                                disabled
-                                                />
-                                            </>
-                                            )}
-                                        </td>
-                                        <td >
-                                            <div className="tableBtn">
-                                            {selectedIndex === index ? (
-                                                <>
-                                                <button className='tableUpdateBtn' onClick={() => {updateHandler(index) }}>Update</button>
-                                                </>
-                                            ) : (
-                                                <>
-                                                <button className='editBtn' onClick={() => {editHandler(index) }}>Edit</button>
-                                                <button className='deleteBtn' onClick={()=>{deleteHandler(index)}}>Delete</button>
-                                                </>
-                                            )}
-                                            </div>
-                                        </td>
+                                            <td>{index + 1}</td>
+                                            <td>{data.itemName}</td>
+                                            <td>
+                                                {selectedIndex === index ? (
+                                                    <input
+                                                        type="text"
+                                                        className="insurancePrice"
+                                                        style={{ padding: "5px", width: "8rem", borderRadius: "2px" }}
+                                                        value={amount}
+                                                        onChange={(e) => {
+                                                            setAmount(e.target.value);
+                                                        }}
+                                                    />
+                                                ) : (
+                                                    <input
+                                                        type="text"
+                                                        className="insurancePrice"
+                                                        style={{ padding: "5px", width: "8rem", borderRadius: "2px", color: "#c9184a", fontWeight: "bold" }}
+                                                        value={data.amount}
+                                                        disabled
+                                                    />
+                                                )}
+                                            </td>
+                                            <td>
+                                                <div className="tableBtn">
+                                                    {selectedIndex === index ? (
+                                                        <button className="tableUpdateBtn" onClick={() => updateHandler(index)}>Update</button>
+                                                    ) : (
+                                                        <>
+                                                            <button className="editBtn" onClick={() => editHandler(index)}>Edit</button>
+                                                            <button className="deleteBtn" onClick={() => deleteHandler(index)}>Delete</button>
+                                                        </>
+                                                    )}
+                                                </div>
+                                            </td>
                                         </tr>
                                     ))}
-                                    {/* Add more rows as needed */}
                                 </tbody>
+
                                 </table>
                                 </div>
                             </div>
