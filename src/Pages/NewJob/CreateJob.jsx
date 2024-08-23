@@ -93,43 +93,61 @@ const CreateJob = () => {
         setVehicleModel(vehicleModel);
     }
     //Hnadle Job Form
-    const handleJobForm=async(e)=>{
+    const handleJobForm = async (e) => {
         e.preventDefault();
-        const formData = {vehicleNo, insuranceName: insuranceName.value, vehicleMake: vehicleMake.value, vehicleModel: vehicleModel.value, customerName, customerAddress, customerMobile, accidentDate, inDate};
-
-        if(!vehicleNo || !insuranceName || !vehicleMake || !vehicleModel || !customerName || !customerAddress || !customerMobile  || !accidentDate || !inDate){
+    
+        // Adjust dates to ensure the correct date is captured, ignoring timezone
+        const adjustedAccidentDate = new Date(accidentDate);
+        adjustedAccidentDate.setMinutes(adjustedAccidentDate.getMinutes() - adjustedAccidentDate.getTimezoneOffset());
+        const formattedAccidentDate = adjustedAccidentDate.toISOString().split('T')[0];
+    
+        const adjustedInDate = new Date(inDate);
+        adjustedInDate.setMinutes(adjustedInDate.getMinutes() - adjustedInDate.getTimezoneOffset());
+        const formattedInDate = adjustedInDate.toISOString().split('T')[0];
+    
+        const formData = {
+            vehicleNo, 
+            insuranceName: insuranceName.value, 
+            vehicleMake: vehicleMake.value, 
+            vehicleModel: vehicleModel.value, 
+            customerName, 
+            customerAddress, 
+            customerMobile, 
+            accidentDate: formattedAccidentDate, 
+            inDate: formattedInDate
+        };
+    
+        if (!vehicleNo || !insuranceName || !vehicleMake || !vehicleModel || !customerName || !customerAddress || !customerMobile || !accidentDate || !inDate) {
             setError(errorType[0]);
             setErrorVisible("block");
-            setTimeout(()=>{
+            setTimeout(() => {
                 setErrorVisible("none");
-            },2000)
-        }else{
-            if(customerMobile.length != 10){
+            }, 2000);
+        } else {
+            if (customerMobile.length !== 10) {
                 setError(errorType[1]);
                 setErrorVisible("block");
-                setTimeout(()=>{
+                setTimeout(() => {
                     setErrorVisible("none");
-                },2000)
-            }else{
-                // await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/job/createJob`, formData)
-                await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/job/createJob`, formData,{
-                    headers:{Authorization:jwtToken}
+                }, 2000);
+            } else {
+                await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/job/createJob`, formData, {
+                    headers: { Authorization: jwtToken }
                 })
-                .then((res)=>{
-                    navigate('/job-report')
-                }).catch((err)=>{
+                .then((res) => {
+                    navigate('/job-report');
+                }).catch((err) => {
                     setErrorVisible("block");
                     setError(err.message);
                     setBackgroundColor("#fae0e4");
                     setBorderColor("#ff0a54");
                     setFontColor("#ff0a54");
                     setIconColor("#ff0a54");
-                })
+                });
             }
-            
         }
-        
     }
+    
   return (
     <div className="createJobContainer">
         <Drawer/>
